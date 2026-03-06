@@ -46,14 +46,18 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
     weather: import('../../types').WeatherHour;
     fieldState: import('../../types').FieldState;
   } | null>(null);
-  const [hoverPos, setHoverPos] = useState<{ x: number; y: number } | null>(null);
+  const [hoverPos, setHoverPos] = useState<{ x: number; y: number; placeAbove: boolean } | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showTooltip = (data: typeof tooltip, x: number, y: number) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setTooltip(data);
-      setHoverPos({ x, y });
+      setHoverPos({
+        x,
+        y,
+        placeAbove: y > window.innerHeight / 2,
+      });
     }, 150);
   };
 
@@ -129,6 +133,30 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
                         </td>
                       );
                     }
+
+                    const isPastCurrentDayCell = d === 0 && cellIndex < nowIndex;
+                    if (isPastCurrentDayCell) {
+                      return (
+                        <td
+                          key={d}
+                          style={{
+                            height: CELL_HEIGHT,
+                            minHeight: CELL_HEIGHT,
+                            backgroundColor: 'var(--surface2)',
+                            border: '1px solid var(--border)',
+                            padding: 0,
+                            verticalAlign: 'middle',
+                            textAlign: 'center',
+                            fontFamily: 'var(--font-sans)',
+                            fontSize: 12,
+                            color: 'var(--text-tertiary)',
+                          }}
+                        >
+                          -
+                        </td>
+                      );
+                    }
+
                     const pair = paired[cellIndex];
                     const status = getSprayStatusForHour(paired, cellIndex);
                     const statusBg =
@@ -187,7 +215,8 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
           style={{
             position: 'fixed',
             left: hoverPos.x + 12,
-            top: hoverPos.y + 12,
+            top: hoverPos.placeAbove ? 'auto' : hoverPos.y + 12,
+            bottom: hoverPos.placeAbove ? window.innerHeight - hoverPos.y + 12 : 'auto',
             zIndex: 1000,
             opacity: 1,
             transition: 'opacity 150ms ease',

@@ -1,8 +1,17 @@
 import { useEffect, useMemo, useState } from 'react';
 import { runFieldStateEngine } from './fieldStateEngine';
 import { MOCK_FORECAST } from './mockWeather';
-import type { PairedHour } from './types';
+import type { ForecastResponse, PairedHour } from './types';
 import { fetchWeatherForecast } from './weatherApi';
+
+type CachedWeatherState = {
+  forecast: ForecastResponse;
+  isLive: boolean;
+  cachedAt: number;
+};
+
+let cachedWeatherState: CachedWeatherState | null = null;
+let weatherRequest: Promise<CachedWeatherState> | null = null;
 
 function getCurrentHourIndex(paired: PairedHour[]): number {
   if (paired.length === 0) return 0;
@@ -27,31 +36,52 @@ export function useWeatherForecast(): {
   nowIndex: number;
   isLoading: boolean;
   isLive: boolean;
+  cachedAt: number | null;
 } {
-  const [forecast, setForecast] = useState<typeof MOCK_FORECAST | null>(null);
-  const [isLive, setIsLive] = useState(false);
+  const [forecast, setForecast] = useState<ForecastResponse | null>(() => cachedWeatherState?.forecast ?? null);
+  const [isLive, setIsLive] = useState(() => cachedWeatherState?.isLive ?? false);
+  const [cachedAt, setCachedAt] = useState<number | null>(() => cachedWeatherState?.cachedAt ?? null);
 
   useEffect(() => {
-    const controller = new AbortController();
+    if (cachedWeatherState) {
+      return;
+    }
+
+    let cancelled = false;
 
     void (async () => {
-      try {
-        const liveForecast = await fetchWeatherForecast(controller.signal);
-        setForecast(liveForecast);
-        setIsLive(true);
-      } catch (error) {
-        if (controller.signal.aborted) {
-          return;
-        }
+      if (!weatherRequest) {
+        weatherRequest = fetchWeatherForecast()
+          .then((liveForecast) => ({
+            forecast: liveForecast,
+            isLive: true,
+            cachedAt: Date.now(),
+          }))
+          .catch((error) => {
+            console.error('Falling back to mock weather data.', error);
+            return {
+              forecast: MOCK_FORECAST,
+              isLive: false,
+              cachedAt: Date.now(),
+            };
+          })
+          .finally(() => {
+            weatherRequest = null;
+          });
+      }
 
-        console.error('Falling back to mock weather data.', error);
-        setForecast(MOCK_FORECAST);
-        setIsLive(false);
+      const nextState = await weatherRequest;
+      cachedWeatherState = nextState;
+
+      if (!cancelled) {
+        setForecast(nextState.forecast);
+        setIsLive(nextState.isLive);
+        setCachedAt(nextState.cachedAt);
       }
     })();
 
     return () => {
-      controller.abort();
+      cancelled = true;
     };
   }, []);
 
@@ -63,5 +93,6 @@ export function useWeatherForecast(): {
     nowIndex,
     isLoading: forecast === null,
     isLive,
+    cachedAt,
   };
 }
