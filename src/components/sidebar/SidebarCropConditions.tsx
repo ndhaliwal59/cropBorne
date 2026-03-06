@@ -115,13 +115,13 @@ export function SidebarCropConditions({ weather, fieldState }: SidebarCropCondit
         <ConditionBar
           label="Sunlight"
           valueLabel={`${sunlightLabel(cloudCover)} ${cloudCover}%`}
-          value={cloudCover}
+          value={100 - cloudCover}
           min={0}
           max={100}
           zones={[
-            { upTo: 0.2, color: 'var(--green)', statusLabel: 'FULL SUN' },
-            { upTo: 0.5, color: 'var(--amber)', statusLabel: 'PARTIAL' },
-            { upTo: 1, color: 'var(--red)', statusLabel: 'OVERCAST' },
+            { upTo: 0.5, color: 'var(--red)', statusLabel: 'OVERCAST' },
+            { upTo: 0.79, color: 'var(--amber)', statusLabel: 'PARTIAL' },
+            { upTo: 1, color: 'var(--green)', statusLabel: 'FULL SUN' },
           ]}
           statusColor={sunStatus.color}
         />

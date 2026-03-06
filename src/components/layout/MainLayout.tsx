@@ -4,7 +4,8 @@ import type { SectionId } from './navConfig';
 import type { StatusColor } from '../../constants';
 
 interface MainLayoutProps {
-  sidebar: ReactNode;
+  /** Omit or pass null to render without a sidebar (e.g. Weather page) */
+  sidebar?: ReactNode | null;
   mainContent: ReactNode;
   activeSection: SectionId | null;
   sectionStatus: Record<SectionId, StatusColor | null>;
@@ -15,7 +16,7 @@ interface MainLayoutProps {
 }
 
 export function MainLayout({
-  sidebar,
+  sidebar = null,
   mainContent,
   activeSection,
   sectionStatus,
@@ -23,12 +24,13 @@ export function MainLayout({
   dataUnavailable = false,
   cachedTimestamp,
 }: MainLayoutProps) {
+  const hasSidebar = sidebar != null;
   return (
     <>
       {sidebar}
       <div
         style={{
-          marginLeft: 'var(--sidebar-width)',
+          marginLeft: hasSidebar ? 'var(--sidebar-width)' : 0,
           minHeight: '100vh',
           display: 'flex',
           flexDirection: 'column',

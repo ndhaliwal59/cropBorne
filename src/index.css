@@ -98,3 +98,69 @@ body {
   0%, 100% { box-shadow: 0 0 8px rgba(239, 68, 68, 0.4); }
   50% { box-shadow: 0 0 8px rgba(239, 68, 68, 0.8); }
 }
+
+/* Weather page — white-forward palette & clean layout (scoped) */
+.weather-page {
+  --wx-text-primary: #ffffff;
+  --wx-text-secondary: rgba(255, 255, 255, 0.6);
+  --wx-text-tertiary: rgba(255, 255, 255, 0.35);
+  --wx-divider: rgba(255, 255, 255, 0.08);
+}
+
+.weather-hourlyWrap {
+  position: relative;
+}
+
+.weather-hourlyWrap::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  height: 100%;
+  width: 56px;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(10, 12, 15, 0), rgba(10, 12, 15, 1));
+}
+
+.weather-hourlyStrip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  padding-right: 56px;
+}
+
+.weather-hourlyStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.weather-current {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 96px;
+  max-width: 980px;
+  margin: 0 auto;
+}
+
+.weather-currentSupport {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px 34px;
+  padding-top: 0;
+  min-width: 280px;
+}
+
+@media (max-width: 860px) {
+  .weather-current {
+    flex-direction: column;
+    gap: 28px;
+  }
+  .weather-currentSupport {
+    padding-top: 0;
+    min-width: 0;
+    width: 100%;
+  }
+}
