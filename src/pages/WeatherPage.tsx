@@ -1,8 +1,8 @@
 import { MainLayout } from '../components/layout/MainLayout';
 import { type SectionId } from '../components/layout/navConfig';
-import { usePairedData } from '../usePairedData';
+import { useWeatherForecast } from '../useWeatherForecast';
 import { THRESHOLDS } from '../constants';
-import { windDirectionFromDegrees } from '../types';
+import { type PairedHour, windDirectionFromDegrees } from '../types';
 
 const LOCATION_LABEL = 'Fresno, CA';
 
@@ -21,7 +21,7 @@ function formatTimeLong(date: Date): string {
   return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 }
 
-function findIndexForTimestamp(paired: ReturnType<typeof usePairedData>['paired'], ts: number): number {
+function findIndexForTimestamp(paired: PairedHour[], ts: number): number {
   for (let i = 0; i < paired.length; i++) {
     const t = new Date(paired[i].weatherHour.time).getTime();
     if (t === ts) return i;
@@ -108,9 +108,9 @@ function findFirstSustainedRange(
 }
 
 export function WeatherPage() {
-  const { paired, nowIndex } = usePairedData();
+  const { paired, nowIndex, isLoading } = useWeatherForecast();
 
-  if (paired.length === 0) {
+  if (isLoading || paired.length === 0) {
     return (
       <div style={{ padding: 40, fontFamily: 'var(--font-sans)', color: 'var(--text-secondary)' }}>
         Loading…
