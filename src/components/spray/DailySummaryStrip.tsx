@@ -6,13 +6,7 @@ interface DailySummaryStripProps {
   nowIndex: number;
 }
 
-const DAY_NAMES = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
 const ROW_LABEL_WIDTH = 48;
-
-function getDayLabel(iso: string): string {
-  const d = new Date(iso);
-  return DAY_NAMES[d.getDay()];
-}
 
 export function DailySummaryStrip({ paired, nowIndex }: DailySummaryStripProps) {
   const todayStart = Math.floor(nowIndex / 24) * 24;
@@ -31,10 +25,9 @@ export function DailySummaryStrip({ paired, nowIndex }: DailySummaryStripProps) 
           backgroundColor: 'var(--surface1)',
           border: '1px solid var(--border)',
           borderRadius: 'var(--radius-card)',
-          padding: '8px 12px',
+          padding: '20px 12px 12px',
         }}
       >
-        <div className="label-caps" style={{ marginBottom: 2 }}>{getDayLabel(firstHour)}</div>
         <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 4 }}>
           {formatDayDate(firstHour)}
         </div>
@@ -66,6 +59,8 @@ export function DailySummaryStrip({ paired, nowIndex }: DailySummaryStripProps) 
           display: 'flex',
           flex: 1,
           minWidth: 0,
+          gap: 10,
+          justifyContent: 'center',
         }}
       >
         {cards}

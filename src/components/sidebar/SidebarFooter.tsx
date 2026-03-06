@@ -17,7 +17,7 @@ export function SidebarFooter({ isCached = false, cachedTimestamp }: SidebarFoot
     >
       {isCached && cachedTimestamp
         ? `Cached data · ${cachedTimestamp}`
-        : 'Mock data · 10-day forecast loaded'}
+        : 'WindBorne Systems · 2026'}
     </div>
   );
 }

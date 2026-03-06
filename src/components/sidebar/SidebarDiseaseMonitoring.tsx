@@ -26,6 +26,8 @@ interface SidebarDiseaseMonitoringProps {
   powderyState: DiseasePanelState;
   downyState: DiseasePanelState;
   fieldState: FieldState;
+  /** When true, render only the rows (no section wrapper or title) for use under a shared MONITORING header */
+  embedded?: boolean;
 }
 
 function TooltipContent({
@@ -159,6 +161,7 @@ export function SidebarDiseaseMonitoring({
   powderyState,
   downyState,
   fieldState,
+  embedded = false,
 }: SidebarDiseaseMonitoringProps) {
   const [hoveredKey, setHoveredKey] = useState<DiseaseKey | null>(null);
   const [tooltipRect, setTooltipRect] = useState<{ top: number; left: number } | null>(null);
@@ -189,7 +192,7 @@ export function SidebarDiseaseMonitoring({
     const sidebarWidth = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--sidebar-width').trim()) || 240;
     const rect = rowEl.getBoundingClientRect();
     setTooltipRect({
-      top: rect.top,
+      top: rect.top - 20,
       left: sidebarWidth + 8,
     });
   }, [hoveredKey]);
@@ -197,92 +200,100 @@ export function SidebarDiseaseMonitoring({
   const hoveredDisease = hoveredKey ? DISEASES.find((d) => d.key === hoveredKey) : null;
   const hoveredState = hoveredKey ? states[hoveredKey] : null;
 
-  return (
-    <>
-      <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
-        <div
-          className="label-caps"
-          style={{
-            fontSize: 11,
-            textTransform: 'uppercase',
-            letterSpacing: '0.12em',
-            color: 'var(--text-tertiary)',
-            marginBottom: 12,
-          }}
-        >
-          DISEASE MONITORING
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {DISEASES.map(({ key, name }) => {
-            const state = states[key];
-            const isInactive = state.severity === 'NO_ALERT';
-            const isWatch = state.severity === 'WATCH';
-            const isWarning = state.severity === 'WARNING';
+  const rows = (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {DISEASES.map(({ key, name }) => {
+        const state = states[key];
+        const isInactive = state.severity === 'NO_ALERT';
+        const isWatch = state.severity === 'WATCH';
+        const isWarning = state.severity === 'WARNING';
 
-            return (
-              <div
-                key={key}
-                ref={(el) => {
-                  rowRefs.current[key] = el;
-                }}
-                onMouseEnter={() => setHovered(key)}
-                onMouseLeave={() => setHovered(null)}
-                role="button"
-                tabIndex={0}
+        return (
+          <div
+            key={key}
+            ref={(el) => {
+              rowRefs.current[key] = el;
+            }}
+            onMouseEnter={() => setHovered(key)}
+            onMouseLeave={() => setHovered(null)}
+            role="button"
+            tabIndex={0}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              width: '100%',
+              padding: '8px 0',
+              cursor: 'default',
+              borderRadius: 'var(--radius-sm)',
+              transition: 'background-color 120ms ease',
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setHovered(hoveredKey === key ? null : key);
+              }
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                flex: 1,
+                minWidth: 0,
+              }}
+            >
+              <span
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  width: '100%',
-                  padding: '8px 0',
-                  cursor: 'default',
-                  borderRadius: 'var(--radius-sm)',
-                  transition: 'background-color 120ms ease',
-                }}
-                  onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    setHovered(hoveredKey === key ? null : key);
-                  }
+                  fontSize: 16,
+                  lineHeight: 1,
+                  opacity: isInactive ? 0.4 : 1,
+                  color: isInactive ? 'var(--text-tertiary)' : isWarning ? 'var(--red)' : isWatch ? 'var(--amber)' : 'var(--text-tertiary)',
+                  boxShadow: isWatch ? '0 0 8px rgba(245, 158, 11, 0.4)' : isWarning ? '0 0 8px rgba(239, 68, 68, 0.4)' : 'none',
+                  animation: isWarning ? 'disease-icon-pulse 1.5s ease-in-out infinite' : undefined,
+                  borderRadius: 2,
                 }}
               >
-                <div
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 8,
-                    flex: 1,
-                    minWidth: 0,
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 16,
-                      lineHeight: 1,
-                      opacity: isInactive ? 0.4 : 1,
-                      color: isInactive ? 'var(--text-tertiary)' : isWarning ? 'var(--red)' : isWatch ? 'var(--amber)' : 'var(--text-tertiary)',
-                      boxShadow: isWatch ? '0 0 8px rgba(245, 158, 11, 0.4)' : isWarning ? '0 0 8px rgba(239, 68, 68, 0.4)' : 'none',
-                      animation: isWarning ? 'disease-icon-pulse 1.5s ease-in-out infinite' : undefined,
-                      borderRadius: 2,
-                    }}
-                  >
-                    &#x26A0;
-                  </span>
-                  <span
-                    style={{
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: 12,
-                      fontWeight: 600,
-                      color: isInactive ? 'var(--text-tertiary)' : isWarning ? 'var(--red)' : isWatch ? 'var(--amber)' : 'var(--text-tertiary)',
-                    }}
-                  >
-                    {name}
-                  </span>
-                </div>
-              </div>
-            );
-          })}
+                &#x26A0;
+              </span>
+              <span
+                style={{
+                  fontFamily: 'var(--font-sans)',
+                  fontSize: 12,
+                  fontWeight: 600,
+                  color: isInactive ? 'var(--text-tertiary)' : isWarning ? 'var(--red)' : isWatch ? 'var(--amber)' : 'var(--text-tertiary)',
+                }}
+              >
+                {name}
+              </span>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <>
+      {embedded ? (
+        rows
+      ) : (
+        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
+          <div
+            className="label-caps"
+            style={{
+              fontSize: 11,
+              textTransform: 'uppercase',
+              letterSpacing: '0.12em',
+              color: 'var(--text-tertiary)',
+              marginBottom: 12,
+            }}
+          >
+            DISEASE MONITORING
+          </div>
+          {rows}
         </div>
-      </div>
+      )}
 
       {hoveredDisease && hoveredState !== null && tooltipRect &&
         createPortal(

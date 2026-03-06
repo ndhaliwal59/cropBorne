@@ -4,29 +4,20 @@ import type { CommitWindowResult } from '../../harvestLogic';
 
 interface CommitWindowBannerProps {
   result: CommitWindowResult;
+  dryStreakHours?: number;
 }
 
-export function CommitWindowBanner({ result }: CommitWindowBannerProps) {
+export function CommitWindowBanner({ result, dryStreakHours = 0 }: CommitWindowBannerProps) {
   if (result.state === 'WINDOW') {
     return (
       <LeftAccentBlock accent="green">
-        <div style={{ marginBottom: 8 }}>
-          <div className="label-caps" style={{ marginBottom: 4 }}>COMMIT WINDOW IDENTIFIED</div>
-          <div style={{ height: 1, backgroundColor: 'var(--border)', margin: '8px 0' }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-            <span className="value-mono" style={{ fontSize: '32px', fontWeight: 600 }}>
-              {result.windowStartDate} – {result.windowEndDate}
-            </span>
-            <span className="value-mono" style={{ fontSize: '32px', fontWeight: 600, color: 'var(--green)' }}>
-              {result.windowDays} DAYS
-            </span>
-          </div>
-          <div style={{ height: 1, backgroundColor: 'var(--border)', margin: '8px 0' }} />
-        </div>
-        <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-          <LabeledDataRow label="DISPATCH BY" value={result.dispatchByDate ?? '—'} />
-          <LabeledDataRow label="DRY STREAK HITS 48" value={result.dryStreakHits48Date ?? '—'} />
-          <LabeledDataRow label="SOIL ON ENTRY DAY" value={result.soilOnEntryDay != null ? `${result.soilOnEntryDay}%` : '—'} />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
+          <span style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
+            ✓ Send crews {result.windowStartDate} · Dispatch by {result.dispatchByDate ?? '—'}
+          </span>
+          <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--green)' }}>
+            DRY STREAK {dryStreakHours} hrs ✓
+          </span>
         </div>
       </LeftAccentBlock>
     );

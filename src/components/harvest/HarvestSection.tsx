@@ -1,8 +1,7 @@
 import type { PairedHour } from '../../types';
 import { getCommitWindow } from '../../harvestLogic';
 import { CommitWindowBanner } from './CommitWindowBanner';
-import { DryHourStreak } from './DryHourStreak';
-import { TenDayRatingStrip } from './TenDayRatingStrip';
+import { HarvestTimeline } from './HarvestTimeline';
 
 interface HarvestSectionProps {
   paired: PairedHour[];
@@ -19,11 +18,10 @@ export function HarvestSection({ paired, nowIndex }: HarvestSectionProps) {
         HARVEST LOGISTICS & DRY-DOWN FORECAST
       </h2>
       <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 24 }}>
-        10-day window analysis · Botrytis risk · Commit window
+        7-day window analysis · Botrytis risk
       </p>
-      <CommitWindowBanner result={commitWindow} />
-      <DryHourStreak dryStreakHours={currentDryStreak} />
-      <TenDayRatingStrip paired={paired} nowIndex={nowIndex} />
+      <CommitWindowBanner result={commitWindow} dryStreakHours={currentDryStreak} />
+      <HarvestTimeline paired={paired} nowIndex={nowIndex} />
     </section>
   );
 }

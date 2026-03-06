@@ -77,7 +77,6 @@ export function SidebarCropConditions({ weather, fieldState }: SidebarCropCondit
             backgroundColor: 'var(--green)',
           }}
         />
-        <span className="label-caps">Now</span>
       </div>
       <div className="label-caps" style={{ marginBottom: 12 }}>
         Crop conditions

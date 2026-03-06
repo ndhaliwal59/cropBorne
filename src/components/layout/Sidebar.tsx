@@ -1,6 +1,7 @@
 import { SidebarWordmark } from '../sidebar/SidebarWordmark';
 import { SidebarCropConditions } from '../sidebar/SidebarCropConditions';
 import { SidebarDiseaseMonitoring } from '../sidebar/SidebarDiseaseMonitoring';
+import { SidebarHeatMonitoring } from '../sidebar/SidebarHeatMonitoring';
 import { SidebarFooter } from '../sidebar/SidebarFooter';
 import { getPowderyMildewState, getDownyMildewState } from '../../diseaseLogic';
 import type { PairedHour } from '../../types';
@@ -51,6 +52,7 @@ export function Sidebar({
           fieldState={now.fieldState}
         />
       )}
+      <SidebarHeatMonitoring paired={paired} nowIndex={nowIndex} />
       <SidebarFooter isCached={isCached} cachedTimestamp={cachedTimestamp} />
     </aside>
   );

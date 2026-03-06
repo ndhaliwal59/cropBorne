@@ -89,32 +89,6 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
               <col key={i} style={{ width: 'calc((100% - 48px) / 7)' }} />
             ))}
           </colgroup>
-          <thead>
-            <tr>
-              <th style={{ width: ROW_LABEL_WIDTH, height: 40, fontFamily: 'var(--font-sans)', fontSize: 11, fontWeight: 600, color: 'var(--text-tertiary)', textAlign: 'left', paddingLeft: 4 }} />
-              {dayLabels.map((day, d) => {
-                const dayDate = new Date(refMidnight);
-                dayDate.setDate(dayDate.getDate() + d);
-                const dateStr = dayDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
-                return (
-                  <th
-                    key={d}
-                    style={{
-                      height: 40,
-                      fontFamily: 'var(--font-sans)',
-                      fontSize: 11,
-                      fontWeight: 600,
-                      color: 'var(--text-primary)',
-                      textAlign: 'center',
-                    }}
-                  >
-                    <div>{day}</div>
-                    <div style={{ fontSize: 10, color: 'var(--text-secondary)' }}>{dateStr}</div>
-                  </th>
-                );
-              })}
-            </tr>
-          </thead>
           <tbody>
             {Array.from({ length: 24 }, (_, hour) => {
               const isNowRow = hour === nowHour;

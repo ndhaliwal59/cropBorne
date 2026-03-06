@@ -5,11 +5,9 @@ import { SECTION_IDS, type SectionId } from './components/layout/navConfig';
 import { useSectionObserver } from './components/layout/TopNav';
 import { usePairedData } from './usePairedData';
 import { SpraySection } from './components/spray/SpraySection';
-import { HeatSection } from './components/heat/HeatSection';
 import { HarvestSection } from './components/harvest/HarvestSection';
 import { SectionDivider } from './components/ui/SectionDivider';
 import { getSpraySectionStatus } from './sectionStatus/spray';
-import { getHeatSectionStatus } from './sectionStatus/heat';
 import { getHarvestSectionStatus } from './sectionStatus/harvest';
 import type { StatusColor } from './constants';
 
@@ -19,7 +17,6 @@ function App() {
 
   const sectionStatus: Record<SectionId, StatusColor | null> = {
     spray: getSpraySectionStatus(paired, nowIndex),
-    heat: getHeatSectionStatus(paired, nowIndex),
     harvest: getHarvestSectionStatus(paired, nowIndex),
   };
 
@@ -46,11 +43,9 @@ function App() {
       }
       mainContent={
         <>
-          <HeatSection paired={paired} nowIndex={nowIndex} />
+          <HarvestSection paired={paired} nowIndex={nowIndex} />
           <SectionDivider />
           <SpraySection paired={paired} nowIndex={nowIndex} />
-          <SectionDivider />
-          <HarvestSection paired={paired} nowIndex={nowIndex} />
         </>
       }
       activeSection={activeSection}
