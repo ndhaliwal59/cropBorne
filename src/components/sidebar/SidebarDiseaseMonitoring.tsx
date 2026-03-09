@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
-import type { FieldState } from '../../types';
+import type { FieldState, WeatherHour } from '../../types';
 import type { DiseasePanelState } from '../../diseaseLogic';
+import { THRESHOLDS } from '../../constants';
 import './SidebarDiseaseMonitoring.css';
 
 type DiseaseKey = 'powdery' | 'downy';
@@ -24,17 +25,22 @@ interface SidebarDiseaseMonitoringProps {
   powderyState: DiseasePanelState;
   downyState: DiseasePanelState;
   fieldState: FieldState;
+  weatherHour?: WeatherHour;
   embedded?: boolean;
 }
 
 function TooltipContent({
+  diseaseKey,
   name,
   state,
   fieldState,
+  weatherHour,
 }: {
+  diseaseKey: DiseaseKey;
   name: string;
   state: DiseasePanelState;
   fieldState: FieldState;
+  weatherHour?: WeatherHour;
 }) {
   const isInactive = state.severity === 'NO_ALERT';
   const isWarning = state.severity === 'WARNING';
@@ -67,7 +73,9 @@ function TooltipContent({
           )}
           {state.sustainedHours != null && (
             <div className="sidebarDiseaseMonitoring__tooltipRow">
-              <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">SUSTAINED FOR</span>
+              <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">
+                {diseaseKey === 'downy' ? 'SUSTAINED WET' : 'SUSTAINED HIGH RH'}
+              </span>
               <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{state.sustainedHours} hrs</span>
             </div>
           )}
@@ -86,18 +94,45 @@ function TooltipContent({
       )}
 
       <div className="sidebarDiseaseMonitoring__tooltipMeta">
-        <div className="sidebarDiseaseMonitoring__tooltipRow">
-          <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">LEAF WETNESS</span>
-          <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.leafWetness} / 10</span>
-        </div>
-        <div className="sidebarDiseaseMonitoring__tooltipRow">
-          <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">24HR RAIN</span>
-          <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.rain24h} mm</span>
-        </div>
-        <div className="sidebarDiseaseMonitoring__tooltipRow">
-          <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">DAYS SINCE RAIN</span>
-          <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.daysSinceRain}</span>
-        </div>
+        {diseaseKey === 'downy' ? (
+          <>
+            <div className="sidebarDiseaseMonitoring__tooltipRow">
+              <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">LEAF WETNESS</span>
+              <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.leafWetness} / 10</span>
+            </div>
+            <div className="sidebarDiseaseMonitoring__tooltipRow">
+              <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">SUSTAINED WET HRS</span>
+              <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{state.sustainedHours ?? 0} / {THRESHOLDS.disease.downy.sustainedHoursWarning}</span>
+            </div>
+            <div className="sidebarDiseaseMonitoring__tooltipRow">
+              <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">24HR RAIN</span>
+              <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.rain24h} mm</span>
+            </div>
+            <div className="sidebarDiseaseMonitoring__tooltipRow">
+              <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">DAYS SINCE RAIN</span>
+              <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.daysSinceRain}</span>
+            </div>
+          </>
+        ) : (
+          <>
+            {weatherHour && (
+              <>
+                <div className="sidebarDiseaseMonitoring__tooltipRow">
+                  <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">HUMIDITY</span>
+                  <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{weatherHour.relative_humidity_2m} / {THRESHOLDS.disease.powdery.humidityMinPercent}%</span>
+                </div>
+                <div className="sidebarDiseaseMonitoring__tooltipRow">
+                  <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">TEMP</span>
+                  <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{Math.round(weatherHour.temperature_2m)} / {THRESHOLDS.disease.powdery.tempMaxF}°F</span>
+                </div>
+                <div className="sidebarDiseaseMonitoring__tooltipRow">
+                  <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">SUSTAINED HIGH RH HRS</span>
+                  <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{state.sustainedHours ?? 0} / {THRESHOLDS.disease.powdery.sustainedHoursWarning}</span>
+                </div>
+              </>
+            )}
+          </>
+        )}
       </div>
     </div>
   );
@@ -107,6 +142,7 @@ export function SidebarDiseaseMonitoring({
   powderyState,
   downyState,
   fieldState,
+  weatherHour,
   embedded = false,
 }: SidebarDiseaseMonitoringProps) {
   const [hoveredKey, setHoveredKey] = useState<DiseaseKey | null>(null);
@@ -215,9 +251,11 @@ export function SidebarDiseaseMonitoring({
             onMouseLeave={() => setHovered(null)}
           >
             <TooltipContent
+              diseaseKey={hoveredDisease.key}
               name={hoveredDisease.name}
               state={hoveredState}
               fieldState={fieldState}
+              weatherHour={weatherHour}
             />
           </div>,
           document.body

@@ -37,6 +37,7 @@ export function Sidebar({
           powderyState={powderyState}
           downyState={downyState}
           fieldState={now.fieldState}
+          weatherHour={now.weatherHour}
         />
       )}
       <SidebarHeatMonitoring paired={paired} nowIndex={nowIndex} />

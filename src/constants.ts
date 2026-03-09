@@ -16,11 +16,22 @@ export const THRESHOLDS = {
     highHeatTempF: 95,
   },
   disease: {
-    leafWetnessWatch: 5,
-    leafWetnessWarning: 7,
-    sustainedHoursWatch: 4,
-    sustainedHoursWarning: 6,
     lookaheadHours: 48,
+    /** Downy mildew: driven by leaf wetness (free moisture on foliage) */
+    downy: {
+      leafWetnessWatch: 5,
+      leafWetnessWarning: 7,
+      sustainedHoursWatch: 4,
+      sustainedHoursWarning: 6,
+    },
+    /** Powdery mildew: driven by high humidity (can develop without free moisture) */
+    powdery: {
+      humidityMinPercent: 85,
+      tempMinF: 59,
+      tempMaxF: 86,
+      sustainedHoursWatch: 4,
+      sustainedHoursWarning: 6,
+    },
   },
   harvest: {
     dryStreakHoursRequired: 48,
