@@ -1,0 +1,49 @@
+/* DailySummaryStrip */
+
+.dailySummaryStrip__wrap {
+  display: flex;
+  width: 100%;
+  margin-bottom: 24px;
+  overflow-x: auto;
+}
+
+.dailySummaryStrip__spacer {
+  width: 48px;
+  flex-shrink: 0;
+}
+
+.dailySummaryStrip__cards {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  gap: 10px;
+  justify-content: center;
+}
+
+.dailySummaryStrip__card {
+  flex: 1;
+  min-width: 0;
+  background-color: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 20px 12px 12px;
+}
+
+.dailySummaryStrip__date {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 4px;
+}
+
+.dailySummaryStrip__window {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-primary);
+}
+
+.dailySummaryStrip__noWindow {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--red);
+}

@@ -1,5 +1,6 @@
 import { LabeledDataRow } from '../ui/LabeledDataRow';
 import { THRESHOLDS } from '../../constants';
+import './DryHourStreak.css';
 
 interface DryHourStreakProps {
   dryStreakHours: number;
@@ -8,26 +9,12 @@ interface DryHourStreakProps {
 export function DryHourStreak({ dryStreakHours }: DryHourStreakProps) {
   const required = THRESHOLDS.harvest.dryStreakHoursRequired;
   return (
-    <div
-      style={{
-        backgroundColor: 'var(--surface2)',
-        padding: 16,
-        borderRadius: 'var(--radius-sm)',
-        marginTop: 16,
-      }}
-    >
+    <div className="dryHourStreak__root">
       <LabeledDataRow
         label="EFFECTIVE DRY-HOUR STREAK"
         value={`${dryStreakHours} hrs / ${required} required`}
       />
-      <p
-        style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: 12,
-          color: 'var(--text-secondary)',
-          margin: '8px 0 0',
-        }}
-      >
+      <p className="dryHourStreak__note">
         Anchored to last rain event · Forecast alone cannot reset the streak.
       </p>
     </div>

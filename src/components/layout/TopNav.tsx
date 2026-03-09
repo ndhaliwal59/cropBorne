@@ -8,6 +8,7 @@ import {
   type SectionId,
 } from './navConfig';
 import type { StatusColor } from '../../constants';
+import './TopNav.css';
 
 interface TopNavProps {
   activeSection: SectionId | null;
@@ -15,24 +16,7 @@ interface TopNavProps {
   onNavigate: (id: SectionId) => void;
 }
 
-const navButtonStyle = {
-  fontFamily: 'var(--font-sans)' as const,
-  fontSize: '12px',
-  fontWeight: 600,
-  textTransform: 'uppercase' as const,
-  letterSpacing: '0.02em',
-  background: 'none',
-  border: 'none',
-  padding: 0,
-  cursor: 'pointer' as const,
-  height: '100%',
-  display: 'flex',
-  alignItems: 'center',
-  marginBottom: -1,
-  textDecoration: 'none',
-};
-
-export function TopNav({ activeSection, sectionStatus, onNavigate }: TopNavProps) {
+export function TopNav({ activeSection: _activeSection, sectionStatus: _sectionStatus, onNavigate: _onNavigate }: TopNavProps) {
   const location = useLocation();
   const isWeatherPage = location.pathname === WEATHER_ROUTE;
   const isInsightsPage = location.pathname === INSIGHTS_ROUTE;
@@ -40,59 +24,27 @@ export function TopNav({ activeSection, sectionStatus, onNavigate }: TopNavProps
 
   return (
     <nav
-      style={{
-        height: 'var(--nav-height)',
-        minHeight: 'var(--nav-height)',
-        backgroundColor: 'var(--surface1)',
-        borderBottom: '1px solid var(--border)',
-        display: 'flex',
-        alignItems: 'center',
-        paddingRight: 'var(--main-padding-x)',
-        paddingLeft: isWeatherPage ? 'var(--main-padding-x)' : 0,
-        gap: 24,
-        position: 'sticky',
-        top: 0,
-        zIndex: 10,
-      }}
+      className="topNav__nav"
+      data-weather-page={isWeatherPage}
     >
       {isWeatherPage ? (
         <>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
-            <div
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 12,
-                fontWeight: 600,
-                letterSpacing: '0.14em',
-                color: '#ffffff',
-              }}
-            >
-              CROPBORNE
-            </div>
-            <div style={{ width: 1, height: 18, backgroundColor: 'rgba(255,255,255,0.08)' }} />
-            <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 400, color: 'rgba(255,255,255,0.6)' }}>
-              Sandoval Vineyard · Fresno, CA
-            </div>
+          <div className="topNav__brand">
+            <div className="topNav__wordmark">CROPBORNE</div>
+            <div className="topNav__brandDivider" />
+            <div className="topNav__subtitle">Sandoval Vineyard · Fresno, CA</div>
           </div>
 
-          <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: 22, height: '100%' }}>
+          <div className="topNav__links">
             <Link
               to={INSIGHTS_ROUTE}
-              style={{
-                ...navButtonStyle,
-                color: 'rgba(255,255,255,0.35)',
-                borderBottom: '2px solid transparent',
-              }}
+              className="topNav__link topNav__linkWeather"
             >
               ← DASHBOARD
             </Link>
             <Link
               to={WEATHER_ROUTE}
-              style={{
-                ...navButtonStyle,
-                color: '#ffffff',
-                borderBottom: '2px solid #ffffff',
-              }}
+              className="topNav__link topNav__linkWeatherActive"
             >
               {WEATHER_LABEL}
             </Link>
@@ -102,22 +54,15 @@ export function TopNav({ activeSection, sectionStatus, onNavigate }: TopNavProps
         <>
           <Link
             to={INSIGHTS_ROUTE}
-            style={{
-              ...navButtonStyle,
-              marginLeft: 'auto',
-              color: isInsightsActive ? 'var(--text-primary)' : 'var(--text-secondary)',
-              borderBottom: isInsightsActive ? '2px solid var(--border-active)' : '2px solid transparent',
-            }}
+            className="topNav__link topNav__linkInsightsMargin"
+            data-active={isInsightsActive}
           >
             {INSIGHTS_LABEL}
           </Link>
           <Link
             to={WEATHER_ROUTE}
-            style={{
-              ...navButtonStyle,
-              color: isWeatherPage ? 'var(--text-primary)' : 'var(--text-secondary)',
-              borderBottom: isWeatherPage ? '2px solid var(--border-active)' : '2px solid transparent',
-            }}
+            className="topNav__link"
+            data-active={isWeatherPage}
           >
             {WEATHER_LABEL}
           </Link>

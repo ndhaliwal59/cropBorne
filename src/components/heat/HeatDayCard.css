@@ -1,0 +1,135 @@
+/* HeatDayCard */
+
+.heatDayCard__card {
+  flex: 1;
+  min-width: 0;
+  background-color: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.heatDayCard__card[data-has-detail="true"] {
+  cursor: default;
+}
+
+.heatDayCard__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.heatDayCard__left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.heatDayCard__todayDot {
+  width: 4px;
+  height: 4px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+}
+
+.heatDayCard__dayLabel {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.heatDayCard__temp {
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.heatDayCard__temp[data-status="red"] {
+  color: var(--red);
+}
+
+.heatDayCard__temp[data-status="amber"] {
+  color: var(--amber);
+}
+
+.heatDayCard__temp[data-status="standard"] {
+  color: var(--text-primary);
+}
+
+.heatDayCard__date {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.heatDayCard__badge {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.heatDayCard__badge[data-badge="high_heat"] {
+  color: var(--red);
+}
+
+.heatDayCard__badge[data-badge="heat_provisions"] {
+  color: var(--amber);
+}
+
+.heatDayCard__badge[data-badge="standard"] {
+  color: var(--text-tertiary);
+}
+
+.heatDayCard__tooltip {
+  position: fixed;
+  z-index: 1000;
+  background-color: var(--surface2);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-md);
+  padding: 12px;
+  min-width: 200px;
+  max-width: 260px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: opacity 150ms ease;
+}
+
+.heatDayCard__tooltipNote {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--amber);
+}
+
+.heatDayCard__tooltipBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.heatDayCard__tooltipFlag {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.heatDayCard__tooltipFlag[data-severity="amber"] {
+  color: var(--amber);
+}
+
+.heatDayCard__tooltipFlag[data-severity="red"] {
+  color: var(--red);
+}
+
+.heatDayCard__tooltipDivider {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border);
+}

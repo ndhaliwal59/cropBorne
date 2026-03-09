@@ -1,0 +1,160 @@
+/* SidebarHeatMonitoring */
+
+.sidebarHeatMonitoring__section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebarHeatMonitoring__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: 8px;
+}
+
+.sidebarHeatMonitoring__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 0;
+  cursor: default;
+  border-radius: var(--radius-sm);
+  transition: background-color 120ms ease;
+}
+
+.sidebarHeatMonitoring__rowInner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebarHeatMonitoring__icon {
+  font-size: 16px;
+  line-height: 1;
+  border-radius: 2px;
+}
+
+.sidebarHeatMonitoring__icon[data-state="all_clear"] {
+  opacity: 0.4;
+  color: var(--text-tertiary);
+}
+
+.sidebarHeatMonitoring__icon[data-state="heat_provisions"] {
+  color: var(--amber);
+}
+
+.sidebarHeatMonitoring__icon[data-state="high_heat"] {
+  color: var(--red);
+  animation: disease-icon-pulse 1.5s ease-in-out infinite;
+}
+
+.sidebarHeatMonitoring__title {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sidebarHeatMonitoring__title[data-state="all_clear"] {
+  color: var(--text-tertiary);
+}
+
+.sidebarHeatMonitoring__title:not([data-state="all_clear"]) {
+  color: var(--text-primary);
+}
+
+.sidebarHeatMonitoring__pill {
+  font-family: var(--font-sans);
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 8px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.sidebarHeatMonitoring__pill[data-state="all_clear"] {
+  color: var(--text-tertiary);
+  background-color: var(--surface2);
+}
+
+.sidebarHeatMonitoring__pill[data-state="heat_provisions"] {
+  color: var(--amber);
+  background-color: rgba(245, 158, 11, 0.2);
+}
+
+.sidebarHeatMonitoring__pill[data-state="high_heat"] {
+  color: var(--red);
+  background-color: rgba(239, 68, 68, 0.2);
+}
+
+/* Tooltip */
+.sidebarHeatMonitoring__tooltip {
+  position: fixed;
+  width: 260px;
+  padding: 16px;
+  background-color: var(--surface2);
+  border: 1px solid var(--border-active);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: tooltip-fade-in 150ms ease-out;
+}
+
+.sidebarHeatMonitoring__tooltipTitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sidebarHeatMonitoring__tooltipCol {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebarHeatMonitoring__tooltipColNarrow {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.sidebarHeatMonitoring__tooltipPara {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.sidebarHeatMonitoring__tooltipDayTitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sidebarHeatMonitoring__tooltipDayTitle[data-badge="heat_provisions"] {
+  color: var(--amber);
+}
+
+.sidebarHeatMonitoring__tooltipDayTitle[data-badge="high_heat"] {
+  color: var(--red);
+}
+
+.sidebarHeatMonitoring__tooltipSub {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-secondary);
+  padding-left: 4px;
+}
+
+.sidebarHeatMonitoring__tooltipTertiary {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  padding-left: 4px;
+}

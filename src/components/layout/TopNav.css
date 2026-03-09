@@ -1,0 +1,94 @@
+/* TopNav */
+
+.topNav__nav {
+  height: var(--nav-height);
+  min-height: var(--nav-height);
+  background-color: var(--surface1);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding-right: var(--main-padding-x);
+  gap: 24px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.topNav__nav[data-weather-page="true"] {
+  padding-left: var(--main-padding-x);
+}
+
+.topNav__brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topNav__wordmark {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: #ffffff;
+}
+
+.topNav__brandDivider {
+  width: 1px;
+  height: 18px;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.topNav__subtitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.topNav__links {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 22px;
+  height: 100%;
+}
+
+.topNav__link {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.02em;
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-bottom: -1px;
+  text-decoration: none;
+  border-bottom: 2px solid transparent;
+}
+
+.topNav__link[data-active="false"] {
+  color: var(--text-secondary);
+}
+
+.topNav__link[data-active="true"] {
+  color: var(--text-primary);
+  border-bottom-color: var(--border-active);
+}
+
+.topNav__linkWeather {
+  color: rgba(255, 255, 255, 0.35);
+}
+
+.topNav__linkWeatherActive {
+  color: #ffffff;
+  border-bottom-color: #ffffff;
+}
+
+.topNav__linkInsightsMargin {
+  margin-left: auto;
+}

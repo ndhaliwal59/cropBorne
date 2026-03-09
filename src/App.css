@@ -1,0 +1,7 @@
+/* App loading state */
+
+.appLoading {
+  padding: 40px;
+  font-family: var(--font-sans);
+  color: var(--text-secondary);
+}

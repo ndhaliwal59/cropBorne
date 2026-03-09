@@ -1,0 +1,26 @@
+/* DiseaseSection */
+
+.diseaseSection__section {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.diseaseSection__title {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.diseaseSection__sub {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.diseaseSection__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}

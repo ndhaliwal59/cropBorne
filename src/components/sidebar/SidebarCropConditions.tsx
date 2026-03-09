@@ -3,6 +3,7 @@ import { THRESHOLDS } from '../../constants';
 import type { StatusColor } from '../../constants';
 import type { WeatherHour } from '../../types';
 import type { FieldState } from '../../types';
+import './SidebarCropConditions.css';
 
 const T = THRESHOLDS.conditionBar.temp;
 const S = THRESHOLDS.conditionBar.soilWater;
@@ -59,29 +60,14 @@ export function SidebarCropConditions({ weather, fieldState }: SidebarCropCondit
   const windStatus = getWindStatus(windMph);
 
   return (
-    <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
-      <div
-        style={{
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          gap: 6,
-          marginBottom: 4,
-        }}
-      >
-        <div
-          style={{
-            width: 4,
-            height: 4,
-            borderRadius: '50%',
-            backgroundColor: 'var(--green)',
-          }}
-        />
+    <div className="sidebarCropConditions__root">
+      <div className="sidebarCropConditions__indicator">
+        <div className="sidebarCropConditions__dot" />
       </div>
-      <div className="label-caps" style={{ marginBottom: 12 }}>
+      <div className="label-caps sidebarCropConditions__label">
         Crop conditions
       </div>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
+      <div className="sidebarCropConditions__bars">
         <ConditionBar
           label="Temperature"
           valueLabel={`${Math.round(tempF)}°F`}

@@ -1,0 +1,172 @@
+/* SidebarDiseaseMonitoring */
+
+.sidebarDiseaseMonitoring__section {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebarDiseaseMonitoring__label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+  margin-bottom: 12px;
+}
+
+.sidebarDiseaseMonitoring__rows {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sidebarDiseaseMonitoring__row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  padding: 8px 0;
+  cursor: default;
+  border-radius: var(--radius-sm);
+  transition: background-color 120ms ease;
+}
+
+.sidebarDiseaseMonitoring__rowInner {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebarDiseaseMonitoring__icon {
+  font-size: 16px;
+  line-height: 1;
+  border-radius: 2px;
+}
+
+.sidebarDiseaseMonitoring__icon[data-state="inactive"] {
+  opacity: 0.4;
+  color: var(--text-tertiary);
+}
+
+.sidebarDiseaseMonitoring__icon[data-state="watch"] {
+  color: var(--amber);
+  box-shadow: 0 0 8px rgba(245, 158, 11, 0.4);
+}
+
+.sidebarDiseaseMonitoring__icon[data-state="warning"] {
+  color: var(--red);
+  box-shadow: 0 0 8px rgba(239, 68, 68, 0.4);
+  animation: disease-icon-pulse 1.5s ease-in-out infinite;
+}
+
+.sidebarDiseaseMonitoring__name {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sidebarDiseaseMonitoring__name[data-state="inactive"] {
+  color: var(--text-tertiary);
+}
+
+.sidebarDiseaseMonitoring__name[data-state="watch"] {
+  color: var(--amber);
+}
+
+.sidebarDiseaseMonitoring__name[data-state="warning"] {
+  color: var(--red);
+}
+
+.sidebarDiseaseMonitoring__tooltip {
+  position: fixed;
+  width: 260px;
+  padding: 16px;
+  background-color: var(--surface2);
+  border: 1px solid var(--border-active);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  animation: tooltip-fade-in 150ms ease-out;
+}
+
+.sidebarDiseaseMonitoring__tooltipCol {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sidebarDiseaseMonitoring__tooltipSub {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+.sidebarDiseaseMonitoring__tooltipTag {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--text-tertiary);
+}
+
+.sidebarDiseaseMonitoring__tooltipTagAlert {
+  font-weight: 600;
+  color: var(--red);
+}
+
+.sidebarDiseaseMonitoring__tooltipTagWarning {
+  font-weight: 600;
+  color: var(--amber);
+}
+
+.sidebarDiseaseMonitoring__tooltipRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.sidebarDiseaseMonitoring__tooltipValue {
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.sidebarDiseaseMonitoring__tooltipPara {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.sidebarDiseaseMonitoring__tooltipAction {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.sidebarDiseaseMonitoring__tooltipAction[data-severity="warning"] {
+  color: var(--red);
+}
+
+.sidebarDiseaseMonitoring__tooltipAction[data-severity="watch"] {
+  color: var(--amber);
+}
+
+.sidebarDiseaseMonitoring__tooltipMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.sidebarDiseaseMonitoring__tooltipTags {
+  display: flex;
+  justify-content: flex-start;
+}

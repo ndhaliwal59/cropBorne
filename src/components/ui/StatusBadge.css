@@ -1,0 +1,29 @@
+/* StatusBadge */
+
+.statusBadge {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  border: 1px solid;
+  display: inline-block;
+}
+
+.statusBadge[data-status="green"] {
+  color: var(--green);
+  border-color: var(--green);
+  background-color: rgba(34, 197, 94, 0.1);
+}
+
+.statusBadge[data-status="amber"] {
+  color: var(--amber);
+  border-color: var(--amber);
+  background-color: rgba(245, 158, 11, 0.1);
+}
+
+.statusBadge[data-status="red"] {
+  color: var(--red);
+  border-color: var(--red);
+  background-color: rgba(239, 68, 68, 0.1);
+}

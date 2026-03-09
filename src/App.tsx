@@ -10,6 +10,7 @@ import { SectionDivider } from './components/ui/SectionDivider';
 import { getSpraySectionStatus } from './sectionStatus/spray';
 import { getHarvestSectionStatus } from './sectionStatus/harvest';
 import type { StatusColor } from './constants';
+import './App.css';
 
 function formatCachedTimestamp(cachedAt: number | null): string | undefined {
   if (cachedAt == null) {
@@ -41,7 +42,7 @@ function App() {
 
   if (isLoading || paired.length === 0) {
     return (
-      <div style={{ padding: 40, fontFamily: 'var(--font-sans)', color: 'var(--text-secondary)' }}>
+      <div className="appLoading">
         Loading…
       </div>
     );

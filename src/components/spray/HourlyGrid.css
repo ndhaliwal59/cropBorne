@@ -1,0 +1,93 @@
+/* HourlyGrid */
+
+.hourlyGrid__wrap {
+  position: relative;
+  width: 100%;
+}
+
+.hourlyGrid__overflow {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+.hourlyGrid__table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+}
+
+.hourlyGrid__rowLabel,
+.hourlyGrid__cellEmpty,
+.hourlyGrid__cellPast,
+.hourlyGrid__cell {
+  height: 28px;
+  min-height: 28px;
+}
+
+.hourlyGrid__rowLabel {
+  padding-left: 4px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  vertical-align: middle;
+}
+
+.hourlyGrid__rowLabelNow {
+  border-top: 1px solid rgba(37, 40, 48, 0.2);
+}
+
+.hourlyGrid__nowBadge {
+  margin-left: 4px;
+  font-size: 9px;
+}
+
+.hourlyGrid__cellEmpty {
+  background-color: var(--surface2);
+  border: 1px solid var(--border);
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--text-tertiary);
+  vertical-align: middle;
+}
+
+.hourlyGrid__cellPast {
+  background-color: var(--surface2);
+  border: 1px solid var(--border);
+  padding: 0;
+  vertical-align: middle;
+  text-align: center;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-tertiary);
+}
+
+.hourlyGrid__cell {
+  border: 1px solid var(--border);
+  padding: 0;
+  vertical-align: middle;
+  cursor: default;
+}
+
+.hourlyGrid__cell[data-status="green"] {
+  background-color: rgba(34, 197, 94, 0.35);
+}
+
+.hourlyGrid__cell[data-status="amber"] {
+  background-color: rgba(245, 158, 11, 0.35);
+}
+
+.hourlyGrid__cell[data-status="red"] {
+  background-color: rgba(239, 68, 68, 0.35);
+}
+
+.hourlyGrid__cell[data-status="none"] {
+  background-color: var(--surface2);
+}
+
+.hourlyGrid__tooltipWrapper {
+  position: fixed;
+  z-index: 1000;
+  opacity: 1;
+  transition: opacity 150ms ease;
+}

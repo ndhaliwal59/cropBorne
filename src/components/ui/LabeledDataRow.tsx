@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import './LabeledDataRow.css';
 
 interface LabeledDataRowProps {
   label: string;
@@ -8,16 +9,9 @@ interface LabeledDataRowProps {
 
 export function LabeledDataRow({ label, value, valueClassName = 'value-mono' }: LabeledDataRowProps) {
   return (
-    <div style={{
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    gap: 8,
-  }}>
+    <div className="labeledDataRow">
       <span className="label-caps">{label}</span>
-      <span className={valueClassName} style={{ fontSize: '14px', fontWeight: 500 }}>
-        {value}
-      </span>
+      <span className={`${valueClassName} labeledDataRow__value`}>{value}</span>
     </div>
   );
 }

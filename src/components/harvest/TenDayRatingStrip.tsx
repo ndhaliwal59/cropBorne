@@ -1,5 +1,6 @@
 import type { PairedHour } from '../../types';
 import { getDayRating, getCommitWindow } from '../../harvestLogic';
+import './TenDayRatingStrip.css';
 
 interface TenDayRatingStripProps {
   paired: PairedHour[];
@@ -32,83 +33,30 @@ export function TenDayRatingStrip({ paired, nowIndex }: TenDayRatingStripProps) 
       dayStart >= windowStartIndex &&
       dayStart <= windowEndIndex;
 
-    const ratingColor =
-      rating.status === 'green'
-        ? 'var(--green)'
-        : rating.status === 'amber'
-          ? 'var(--amber)'
-          : 'var(--red)';
-
     const dateStr = new Date(firstTime).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 
     cards.push(
       <div
         key={d}
-        style={{
-          flex: 1,
-          minWidth: 0,
-          backgroundColor: 'var(--surface1)',
-          border: '1px solid var(--border)',
-          ...(isInCommitWindow ? { borderTop: '2px solid var(--green)' } : {}),
-          borderRadius: 'var(--radius-card)',
-          padding: 20,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 12,
-        }}
+        className="tenDayRatingStrip__card"
+        data-in-window={isInCommitWindow}
       >
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6, minWidth: 0 }}>
-            {isToday && (
-              <div
-                style={{
-                  width: 4,
-                  height: 4,
-                  flexShrink: 0,
-                  borderRadius: '50%',
-                  backgroundColor: 'var(--text-primary)',
-                }}
-              />
-            )}
-            <span
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 11,
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                color: 'var(--text-tertiary)',
-              }}
-            >
+        <div className="tenDayRatingStrip__cardHeader">
+          <div className="tenDayRatingStrip__cardLeft">
+            {isToday && <div className="tenDayRatingStrip__todayDot" />}
+            <span className="tenDayRatingStrip__dayAbbrev">
               {dayAbbrev(firstTime)}
             </span>
           </div>
           <span
-            className="value-mono"
-            style={{ fontSize: 22, fontWeight: 700, color: ratingColor, flexShrink: 0 }}
+            className="value-mono tenDayRatingStrip__rating"
+            data-status={rating.status}
           >
             {rating.rating}
           </span>
         </div>
-        <div
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 20,
-            fontWeight: 700,
-            color: 'var(--text-primary)',
-          }}
-        >
-          {dateStr}
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            fontFamily: 'var(--font-sans)',
-            fontSize: 12,
-            color: 'var(--text-tertiary)',
-          }}
-        >
+        <div className="tenDayRatingStrip__date">{dateStr}</div>
+        <div className="tenDayRatingStrip__details">
           <div>Botrytis  {rating.botrytis}</div>
           <div>Rain  {rating.rainProb}%</div>
         </div>
@@ -117,8 +65,8 @@ export function TenDayRatingStrip({ paired, nowIndex }: TenDayRatingStripProps) 
   }
 
   return (
-    <div style={{ marginTop: 24 }}>
-      <div style={{ display: 'flex', gap: 8, overflowX: 'auto' }}>
+    <div className="tenDayRatingStrip__wrap">
+      <div className="tenDayRatingStrip__scroll">
         {cards}
       </div>
     </div>

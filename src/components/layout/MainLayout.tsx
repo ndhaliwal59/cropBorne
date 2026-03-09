@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { TopNav } from './TopNav';
 import type { SectionId } from './navConfig';
 import type { StatusColor } from '../../constants';
+import './MainLayout.css';
 
 interface MainLayoutProps {
   /** Omit or pass null to render without a sidebar (e.g. Weather page) */
@@ -29,24 +30,11 @@ export function MainLayout({
     <>
       {sidebar}
       <div
-        style={{
-          marginLeft: hasSidebar ? 'var(--sidebar-width)' : 0,
-          minHeight: '100vh',
-          display: 'flex',
-          flexDirection: 'column',
-        }}
+        className="mainLayout__wrapper"
+        data-has-sidebar={hasSidebar}
       >
         {dataUnavailable && (
-          <div
-            style={{
-              padding: '10px var(--main-padding-x)',
-              backgroundColor: 'rgba(245, 158, 11, 0.1)',
-              borderBottom: '1px solid var(--amber)',
-              fontFamily: 'var(--font-sans)',
-              fontSize: 13,
-              color: 'var(--amber)',
-            }}
-          >
+          <div className="mainLayout__banner">
             ⚠ Weather data unavailable — displaying cached data from {cachedTimestamp ?? 'unknown'}.
           </div>
         )}
@@ -55,16 +43,7 @@ export function MainLayout({
           sectionStatus={sectionStatus}
           onNavigate={onNavigate}
         />
-        <main
-          style={{
-            flex: 1,
-            padding: `0 var(--main-padding-x)`,
-            maxWidth: 'var(--main-max-width)',
-            width: '100%',
-            margin: '0 auto',
-            overflowY: 'auto',
-          }}
-        >
+        <main className="mainLayout__main">
           {mainContent}
         </main>
       </div>

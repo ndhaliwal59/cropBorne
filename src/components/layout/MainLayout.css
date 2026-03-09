@@ -1,0 +1,29 @@
+/* MainLayout */
+
+.mainLayout__wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.mainLayout__wrapper[data-has-sidebar="true"] {
+  margin-left: var(--sidebar-width);
+}
+
+.mainLayout__banner {
+  padding: 10px var(--main-padding-x);
+  background-color: rgba(245, 158, 11, 0.1);
+  border-bottom: 1px solid var(--amber);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--amber);
+}
+
+.mainLayout__main {
+  flex: 1;
+  padding: 0 var(--main-padding-x);
+  max-width: var(--main-max-width);
+  width: 100%;
+  margin: 0 auto;
+  overflow-y: auto;
+}

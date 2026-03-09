@@ -1,0 +1,7 @@
+/* SectionDivider */
+
+.sectionDivider {
+  margin-top: var(--section-gap);
+  padding-top: var(--section-gap);
+  border-top: 1px solid var(--border);
+}

@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { PairedHour } from '../../types';
 import { getHeatDayInfo, type HeatDayInfo } from '../../heatLogic';
+import './SidebarHeatMonitoring.css';
 
 type HeatComplianceState = 'all_clear' | 'heat_provisions' | 'high_heat';
 
@@ -36,23 +37,12 @@ function getComplianceState(paired: PairedHour[], nowIndex: number): { state: He
 function TooltipContent({ state, flaggedDays }: { state: HeatComplianceState; flaggedDays: HeatDayInfo[] }) {
   if (state === 'all_clear') {
     return (
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-        <div
-          style={{
-            fontFamily: 'var(--font-sans)',
-            fontSize: 12,
-            fontWeight: 600,
-            color: 'var(--text-primary)',
-          }}
-        >
-                  &#x26A0; HEAT COMPLIANCE
+      <div className="sidebarHeatMonitoring__tooltipCol">
+        <div className="sidebarHeatMonitoring__tooltipTitle">
+          &#x26A0; HEAT COMPLIANCE
         </div>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--text-secondary)', margin: 0 }}>
-          No heat events in 7-day forecast.
-        </p>
-        <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--text-secondary)', margin: 0 }}>
-          All shifts standard.
-        </p>
+        <p className="sidebarHeatMonitoring__tooltipPara">No heat events in 7-day forecast.</p>
+        <p className="sidebarHeatMonitoring__tooltipPara">All shifts standard.</p>
       </div>
     );
   }
@@ -63,54 +53,28 @@ function TooltipContent({ state, flaggedDays }: { state: HeatComplianceState; fl
     `${info.dayLabel} ${info.dateLabel.toUpperCase()}`;
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-      <div
-        style={{
-          fontFamily: 'var(--font-sans)',
-          fontSize: 12,
-          fontWeight: 600,
-          color: 'var(--text-primary)',
-        }}
-      >
+    <div className="sidebarHeatMonitoring__tooltipCol" style={{ gap: 12 }}>
+      <div className="sidebarHeatMonitoring__tooltipTitle">
         &#x26A0; HEAT COMPLIANCE
       </div>
       {flaggedDays.map((info) => (
-        <div key={`${info.dayLabel}-${info.dateLabel}`} style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+        <div key={`${info.dayLabel}-${info.dateLabel}`} className="sidebarHeatMonitoring__tooltipColNarrow">
           <div
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 12,
-              fontWeight: 600,
-              color: info.badge === 'HIGH-HEAT PROTOCOL ACTIVE' ? 'var(--red)' : 'var(--amber)',
-            }}
+            className="sidebarHeatMonitoring__tooltipDayTitle"
+            data-badge={info.badge === 'HIGH-HEAT PROTOCOL ACTIVE' ? 'high_heat' : 'heat_provisions'}
           >
             ⚑ {dateLine(info)} — {pillLabel(info)}
           </div>
-          <div
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              color: 'var(--text-secondary)',
-              paddingLeft: 4,
-            }}
-          >
-            Start {info.startTime}
+          <div className="sidebarHeatMonitoring__tooltipSub">
             {info.badge === 'HEAT PROVISIONS REQUIRED' && (
-              <> · Shade & water from {info.crosses80Time ?? '—'}</>
+              <>Shade & water {info.crosses80Time ?? '—'} – {info.dropsBelow80Time ?? '—'}</>
             )}
             {info.badge === 'HIGH-HEAT PROTOCOL ACTIVE' && (
-              <> · Breaks from 10AM</>
+              <>Breaks from 10AM</>
             )}
           </div>
           {info.badge === 'HIGH-HEAT PROTOCOL ACTIVE' && info.compliantHours != null && (
-            <div
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 11,
-                color: 'var(--text-tertiary)',
-                paddingLeft: 4,
-              }}
-            >
+            <div className="sidebarHeatMonitoring__tooltipTertiary">
               Compliant hours: {info.compliantHours}
             </div>
           )}
@@ -127,7 +91,6 @@ export function SidebarHeatMonitoring({ paired, nowIndex, embedded = false }: Si
   const leaveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { state, flaggedDays } = getComplianceState(paired, nowIndex);
-  const isAllClear = state === 'all_clear';
   const isHeatProvisions = state === 'heat_provisions';
   const isHighHeat = state === 'high_heat';
 
@@ -171,217 +134,65 @@ export function SidebarHeatMonitoring({ paired, nowIndex, embedded = false }: Si
     });
   }, [hovered]);
 
-  const iconColor = isAllClear
-    ? 'var(--text-tertiary)'
-    : isHighHeat
-      ? 'var(--red)'
-      : 'var(--amber)';
-
-  const pillBg =
-    isAllClear
-      ? 'var(--surface2)'
-      : isHighHeat
-        ? 'rgba(239, 68, 68, 0.2)'
-        : 'rgba(245, 158, 11, 0.2)';
-  const pillColor = isAllClear
-    ? 'var(--text-tertiary)'
-    : isHighHeat
-      ? 'var(--red)'
-      : 'var(--amber)';
+  const row = (
+    <div
+      ref={rowRef}
+      onMouseEnter={() => setHoveredWithDelay(true)}
+      onMouseLeave={() => setHoveredWithDelay(false)}
+      role="button"
+      tabIndex={0}
+      className="sidebarHeatMonitoring__row"
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          setHoveredWithDelay(!hovered);
+        }
+      }}
+    >
+      <div className="sidebarHeatMonitoring__rowInner">
+        <span
+          className="sidebarHeatMonitoring__icon"
+          data-state={state}
+          aria-hidden
+        >
+          &#x26A0;
+        </span>
+        <span
+          className="sidebarHeatMonitoring__title"
+          data-state={state}
+        >
+          {embedded ? 'HEAT' : 'LABOUR'}
+        </span>
+      </div>
+      <span
+        className="sidebarHeatMonitoring__pill"
+        data-state={state}
+      >
+        {pillText}
+      </span>
+    </div>
+  );
 
   return (
     <>
       {embedded ? (
-        <>
-          <div
-            ref={rowRef}
-            onMouseEnter={() => setHoveredWithDelay(true)}
-            onMouseLeave={() => setHoveredWithDelay(false)}
-            role="button"
-            tabIndex={0}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              width: '100%',
-              padding: '8px 0',
-              cursor: 'default',
-              borderRadius: 'var(--radius-sm)',
-              transition: 'background-color 120ms ease',
-            }}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                setHoveredWithDelay(!hovered);
-              }
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                flex: 1,
-                minWidth: 0,
-              }}
-            >
-              <span
-                style={{
-                  fontSize: 16,
-                  lineHeight: 1,
-                  opacity: isAllClear ? 0.4 : 1,
-                  color: iconColor,
-                  boxShadow:
-                    isHeatProvisions
-                      ? '0 0 8px rgba(245, 158, 11, 0.4)'
-                      : isHighHeat
-                        ? '0 0 8px rgba(239, 68, 68, 0.4)'
-                        : 'none',
-                  animation: isHighHeat ? 'disease-icon-pulse 1.5s ease-in-out infinite' : undefined,
-                  borderRadius: 2,
-                }}
-              >
-                &#x26A0;
-              </span>
-              <span
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: isAllClear ? 'var(--text-tertiary)' : 'var(--text-primary)',
-                }}
-              >
-                HEAT
-              </span>
-            </div>
-            <span
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 10,
-                fontWeight: 600,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                color: pillColor,
-                backgroundColor: pillBg,
-                padding: '4px 8px',
-                borderRadius: 999,
-                flexShrink: 0,
-              }}
-            >
-              {pillText}
-            </span>
-          </div>
-        </>
+        row
       ) : (
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
-          <div
-            className="label-caps"
-            style={{
-              fontSize: 11,
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              color: 'var(--text-tertiary)',
-              marginBottom: 8,
-            }}
-          >
+        <div className="sidebarHeatMonitoring__section">
+          <div className="label-caps sidebarHeatMonitoring__label">
             HEAT COMPLIANCE
           </div>
-          <div
-            ref={rowRef}
-          onMouseEnter={() => setHoveredWithDelay(true)}
-          onMouseLeave={() => setHoveredWithDelay(false)}
-          role="button"
-          tabIndex={0}
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            width: '100%',
-            padding: '8px 0',
-            cursor: 'default',
-            borderRadius: 'var(--radius-sm)',
-            transition: 'background-color 120ms ease',
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault();
-              setHoveredWithDelay(!hovered);
-            }
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 8,
-              flex: 1,
-              minWidth: 0,
-            }}
-          >
-            <span
-              style={{
-                fontSize: 16,
-                lineHeight: 1,
-                opacity: isAllClear ? 0.4 : 1,
-                color: iconColor,
-                boxShadow:
-                  isHeatProvisions
-                    ? '0 0 8px rgba(245, 158, 11, 0.4)'
-                    : isHighHeat
-                      ? '0 0 8px rgba(239, 68, 68, 0.4)'
-                      : 'none',
-                animation: isHighHeat ? 'disease-icon-pulse 1.5s ease-in-out infinite' : undefined,
-                borderRadius: 2,
-              }}
-            >
-              &#x26A0;
-            </span>
-            <span
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 12,
-                fontWeight: 600,
-                color: isAllClear ? 'var(--text-tertiary)' : 'var(--text-primary)',
-              }}
-            >
-              HEAT & LABOUR
-            </span>
-          </div>
-          <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 10,
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              color: pillColor,
-              backgroundColor: pillBg,
-              padding: '4px 8px',
-              borderRadius: 999,
-              flexShrink: 0,
-            }}
-          >
-            {pillText}
-          </span>
-        </div>
+          {row}
         </div>
       )}
 
       {hovered && tooltipRect &&
         createPortal(
           <div
+            className="sidebarHeatMonitoring__tooltip"
             style={{
-              position: 'fixed',
               top: tooltipRect.top,
               left: tooltipRect.left,
-              width: 260,
-              padding: 16,
-              backgroundColor: 'var(--surface2)',
-              border: '1px solid var(--border-active)',
-              borderRadius: 8,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              zIndex: 1000,
-              animation: 'tooltip-fade-in 150ms ease-out',
             }}
             onMouseEnter={() => setHoveredWithDelay(true)}
             onMouseLeave={() => setHoveredWithDelay(false)}

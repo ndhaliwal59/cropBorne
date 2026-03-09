@@ -1,4 +1,5 @@
 import type { StatusColor } from '../../constants';
+import './ConditionBar.css';
 
 interface ConditionBarProps {
   label: string;
@@ -23,11 +24,6 @@ export function ConditionBar({
 }: ConditionBarProps) {
   const range = max - min || 1;
   const positionPercent = Math.min(100, Math.max(0, ((value - min) / range) * 100));
-  const statusStyles: Record<StatusColor, React.CSSProperties> = {
-    green: { color: 'var(--green)' },
-    amber: { color: 'var(--amber)' },
-    red: { color: 'var(--red)' },
-  };
 
   let currentZone = zones[0];
   for (const z of zones) {
@@ -43,57 +39,27 @@ export function ConditionBar({
     .join(', ');
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 6 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+    <div className="conditionBar__root">
+      <div className="conditionBar__header">
         <span className="label-caps">{label}</span>
-        <span className="value-mono" style={{ fontSize: '14px' }}>
-          {valueLabel}
-        </span>
+        <span className="value-mono conditionBar__value">{valueLabel}</span>
       </div>
-      <div style={{ position: 'relative', height: 20 }}>
+      <div className="conditionBar__trackWrap">
         <div
-          style={{
-            height: 6,
-            borderRadius: 4,
-            background: `linear-gradient(to right, ${gradientStops})`,
-            marginTop: 14,
-          }}
+          className="conditionBar__track"
+          style={{ background: `linear-gradient(to right, ${gradientStops})` }}
         />
         <div
-          style={{
-            position: 'absolute',
-            left: `${positionPercent}%`,
-            transform: 'translateX(-1px)',
-            top: 0,
-            width: 2,
-            height: 14,
-            backgroundColor: '#fff',
-            borderRadius: 1,
-          }}
+          className="conditionBar__marker"
+          style={{ left: `${positionPercent}%` }}
         />
         <div
-          style={{
-            position: 'absolute',
-            left: `${positionPercent}%`,
-            transform: 'translateX(-2px)',
-            top: 12,
-            width: 4,
-            height: 4,
-            borderRadius: '50%',
-            backgroundColor: '#fff',
-          }}
+          className="conditionBar__dot"
+          style={{ left: `${positionPercent}%` }}
         />
       </div>
-      <div style={{ textAlign: 'right' }}>
-        <span
-          style={{
-            fontSize: '10px',
-            fontWeight: 600,
-            ...statusStyles[statusColor],
-          }}
-        >
-          {currentZone.statusLabel}
-        </span>
+      <div className="conditionBar__status" data-status={statusColor}>
+        {currentZone.statusLabel}
       </div>
     </div>
   );

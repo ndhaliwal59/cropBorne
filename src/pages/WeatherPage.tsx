@@ -1,8 +1,8 @@
 import { MainLayout } from '../components/layout/MainLayout';
 import { type SectionId } from '../components/layout/navConfig';
 import { useWeatherForecast } from '../useWeatherForecast';
-import { THRESHOLDS } from '../constants';
 import { type PairedHour, windDirectionFromDegrees } from '../types';
+import './WeatherPage.css';
 
 const LOCATION_LABEL = 'Fresno, CA';
 
@@ -15,10 +15,6 @@ function formatHourLabel(date: Date): string {
   const isAm = h < 12;
   const h12 = h % 12 || 12;
   return `${h12}${isAm ? 'am' : 'pm'}`;
-}
-
-function formatTimeLong(date: Date): string {
-  return date.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 }
 
 function findIndexForTimestamp(paired: PairedHour[], ts: number): number {
@@ -48,10 +44,6 @@ function conditionForDay(codeAtMidday: number, maxRainProb: number): string {
   return base;
 }
 
-function tempDisplayColor(tempF: number): string {
-  return tempF > 95 ? '#ffd580' : '#ffffff';
-}
-
 function feelsLikeF(tempF: number, humidityPct: number, windMph: number): number {
   // Heat Index (NOAA) when warm/humid; Wind Chill when cold/windy; else actual temp.
   if (tempF >= 80 && humidityPct >= 40) {
@@ -76,43 +68,12 @@ function feelsLikeF(tempF: number, humidityPct: number, windMph: number): number
   return tempF;
 }
 
-function findFirstSustainedRange(
-  hours: { time: string; windMph: number }[],
-  thresholdMph: number,
-  minConsecutiveHours: number
-): { start: Date; endInclusive: Date } | null {
-  let runStart = -1;
-  for (let i = 0; i < hours.length; i++) {
-    const meets = hours[i].windMph >= thresholdMph;
-    if (meets && runStart === -1) runStart = i;
-    if (!meets && runStart !== -1) {
-      const runLen = i - runStart;
-      if (runLen >= minConsecutiveHours) {
-        const start = new Date(hours[runStart].time);
-        const endInclusive = new Date(hours[i - 1].time);
-        return { start, endInclusive };
-      }
-      runStart = -1;
-    }
-  }
-  if (runStart !== -1) {
-    const runLen = hours.length - runStart;
-    if (runLen >= minConsecutiveHours) {
-      return {
-        start: new Date(hours[runStart].time),
-        endInclusive: new Date(hours[hours.length - 1].time),
-      };
-    }
-  }
-  return null;
-}
-
 export function WeatherPage() {
   const { paired, nowIndex, isLoading } = useWeatherForecast();
 
   if (isLoading || paired.length === 0) {
     return (
-      <div style={{ padding: 40, fontFamily: 'var(--font-sans)', color: 'var(--text-secondary)' }}>
+      <div className="weatherPage__loading">
         Loading…
       </div>
     );
@@ -162,21 +123,6 @@ export function WeatherPage() {
     };
   });
 
-  const next24 = paired
-    .slice(nowIndex, Math.min(nowIndex + 24, paired.length))
-    .map((p) => ({ time: p.weatherHour.time, windMph: p.weatherHour.windspeed_10m, dirDeg: p.weatherHour.winddirection_10m }));
-  const avgWind24 = next24.length ? next24.reduce((s, h) => s + h.windMph, 0) / next24.length : nowWeather.windspeed_10m;
-  const peakWind24 = next24.reduce(
-    (best, h) => (h.windMph > best.windMph ? h : best),
-    next24[0] ?? { time: nowWeather.time, windMph: nowWeather.windspeed_10m, dirDeg: nowWeather.winddirection_10m }
-  );
-  const shiftDir = windDirectionFromDegrees(peakWind24.dirDeg);
-
-  const sprayWindThreshold = THRESHOLDS.spray.windMaxMph;
-  const highWindThreshold = THRESHOLDS.conditionBar.wind.highAboveMph;
-  const aboveSpray = findFirstSustainedRange(next24, sprayWindThreshold, 2);
-  const aboveHigh = findFirstSustainedRange(next24, highWindThreshold, 2);
-
   const sectionStatus: Record<SectionId, null> = {
     spray: null,
     harvest: null,
@@ -185,48 +131,25 @@ export function WeatherPage() {
   return (
     <MainLayout
       mainContent={
-        <div
-          className="weather-page"
-          style={{
-            paddingTop: 12,
-            paddingBottom: 56,
-            color: 'var(--wx-text-primary)',
-            fontFamily: 'var(--font-sans)',
-          }}
-        >
-          <section style={{ paddingTop: 52, paddingBottom: 44 }}>
+        <div className="weather-page weatherPage__root">
+          <section className="weatherPage__sectionHero">
             <div className="weather-current">
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: 16, fontWeight: 400, color: 'var(--wx-text-primary)', marginBottom: 12 }}>
+              <div className="weatherPage__currentLeft">
+                <div className="weatherPage__location">
                   {LOCATION_LABEL}
                 </div>
                 <div
-                  style={{
-                    fontSize: 96,
-                    fontWeight: 300,
-                    lineHeight: 1,
-                    letterSpacing: '-0.02em',
-                    color: tempDisplayColor(nowTempF),
-                    marginBottom: 10,
-                  }}
+                  className="weatherPage__temp"
+                  data-hot={nowTempF > 95}
                 >
                   {Math.round(nowTempF)}°
                 </div>
-                <div style={{ fontSize: 18, fontWeight: 300, color: 'var(--wx-text-secondary)', marginBottom: 14 }}>
+                <div className="weatherPage__condition">
                   {weatherCodeToCondition(nowWeather.weathercode)}
                 </div>
-                <div
-                  style={{
-                    fontSize: 14,
-                    fontWeight: 400,
-                    color: 'var(--wx-text-tertiary)',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 10,
-                  }}
-                >
+                <div className="weatherPage__highLow">
                   <span>High {Math.round(todayHigh)}°</span>
-                  <span style={{ width: 3, height: 3, borderRadius: 999, backgroundColor: 'var(--wx-divider)' }} />
+                  <span className="weatherPage__highLowDot" />
                   <span>Low {Math.round(todayLow)}°</span>
                 </div>
               </div>
@@ -238,60 +161,36 @@ export function WeatherPage() {
                   { label: 'Wind', value: `${Math.round(nowWeather.windspeed_10m)} mph ${nowWindDir}` },
                   { label: 'Precipitation', value: `${Math.round(nowWeather.precipitation_probability)}%` },
                 ].map((item) => (
-                  <div key={item.label} style={{ textAlign: 'left' }}>
-                    <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--wx-text-tertiary)', marginBottom: 6 }}>
-                      {item.label}
-                    </div>
-                    <div style={{ fontSize: 16, fontWeight: 400, color: 'var(--wx-text-primary)' }}>{item.value}</div>
+                  <div key={item.label} className="weatherPage__supportItem">
+                    <div className="weatherPage__supportLabel">{item.label}</div>
+                    <div className="weatherPage__supportValue">{item.value}</div>
                   </div>
                 ))}
               </div>
             </div>
           </section>
 
-          <section style={{ paddingTop: 6, paddingBottom: 34 }}>
+          <section className="weatherPage__sectionHourly">
             <div className="weather-hourlyWrap">
-              <div
-                className="weather-hourlyStrip"
-                style={{
-                  paddingTop: 14,
-                  paddingBottom: 12,
-                  borderBottom: '1px solid var(--wx-divider)',
-                }}
-              >
+              <div className="weather-hourlyStrip weatherPage__hourlyStripInner">
                 {hourlyNext.map((h, i) => {
                   const d = new Date(h.time);
                   const label = i === 0 ? 'NOW' : formatHourLabel(d);
                   const tempF = h.temperature_2m;
                   const precipProb = clamp(h.precipitation_probability, 0, 100);
                   return (
-                    <div
-                      key={h.time}
-                      style={{
-                        flex: '0 0 auto',
-                        width: 56,
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        gap: 10,
-                        padding: '0 10px',
-                      }}
-                    >
-                      <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--wx-text-tertiary)' }}>{label}</div>
+                    <div key={h.time} className="weatherPage__hourlyCard">
+                      <div className="weatherPage__hourlyLabel">{label}</div>
                       <div
-                        style={{
-                          fontSize: 15,
-                          fontWeight: 400,
-                          color: tempDisplayColor(tempF),
-                          lineHeight: 1.1,
-                        }}
+                        className="weatherPage__hourlyTemp"
+                        data-hot={tempF > 95}
                       >
                         {Math.round(tempF)}°
                       </div>
-                      <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--wx-text-primary)' }}>
+                      <div className="weatherPage__hourlyPrecip">
                         {Math.round(precipProb)}%
                       </div>
-                      <div style={{ fontSize: 11, fontWeight: 500, color: 'var(--wx-text-tertiary)' }}>
+                      <div className="weatherPage__hourlyWind">
                         {Math.round(h.windspeed_10m)}mph
                       </div>
                     </div>
@@ -301,65 +200,40 @@ export function WeatherPage() {
             </div>
           </section>
 
-          <section style={{ paddingTop: 6, paddingBottom: 46 }}>
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
+          <section className="weatherPage__sectionForecast">
+            <div className="weather-forecast weatherPage__forecastWrap">
               {days.map((d, idx) => {
                 const rain = clamp(d.rainMax, 0, 100);
-                const showDayLabelInWhite = idx === 0;
                 return (
                   <div key={d.label}>
-                    <div
-                      style={{
-                        display: 'grid',
-                        gridTemplateColumns: '140px 260px 170px 90px 140px',
-                        columnGap: 18,
-                        alignItems: 'center',
-                        padding: '14px 0',
-                      }}
-                    >
+                    <div className="weather-forecastGrid">
                       <div
-                        style={{
-                          fontSize: 14,
-                          fontWeight: 500,
-                          color: showDayLabelInWhite ? 'var(--wx-text-primary)' : 'var(--wx-text-secondary)',
-                        }}
+                        className="weatherPage__dayLabel"
+                        data-today={idx === 0}
                       >
                         {d.label}
                       </div>
-                      <div style={{ fontSize: 14, fontWeight: 400, color: 'var(--wx-text-secondary)' }}>{d.condition}</div>
-                      <div style={{ fontSize: 14, display: 'flex', alignItems: 'baseline', gap: 10 }}>
-                        <span style={{ fontWeight: 500, color: tempDisplayColor(d.high) }}>H {Math.round(d.high)}°</span>
-                        <span style={{ fontWeight: 400, color: 'var(--wx-text-tertiary)' }}>L {Math.round(d.low)}°</span>
+                      <div className="weatherPage__forecastCondition">{d.condition}</div>
+                      <div className="weatherPage__forecastTemps">
+                        <span className="weatherPage__forecastHigh" data-hot={d.high > 95}>H {Math.round(d.high)}°</span>
+                        <span className="weatherPage__forecastLow">L {Math.round(d.low)}°</span>
                       </div>
-                      <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--wx-text-tertiary)' }}>
+                      <div className="weatherPage__forecastWind">
                         {Math.round(d.windAvg)} mph
                       </div>
-                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: 10 }}>
-                        <div style={{ fontSize: 13, fontWeight: 500, color: 'var(--wx-text-primary)', width: 44 }}>
+                      <div className="weatherPage__rainRow">
+                        <div className="weatherPage__rainPct">
                           {Math.round(rain)}%
                         </div>
-                        <div
-                          aria-hidden
-                          style={{
-                            width: 48,
-                            height: 4,
-                            borderRadius: 999,
-                            backgroundColor: 'rgba(255,255,255,0.08)',
-                            overflow: 'hidden',
-                          }}
-                        >
+                        <div className="weatherPage__rainBar" aria-hidden>
                           <div
-                            style={{
-                              width: `${(rain / 100) * 48}px`,
-                              height: 4,
-                              backgroundColor: 'rgba(255,255,255,0.2)',
-                              borderRadius: 999,
-                            }}
+                            className="weatherPage__rainFill"
+                            style={{ width: `${(rain / 100) * 48}px` }}
                           />
                         </div>
                       </div>
                     </div>
-                    {idx < days.length - 1 && <div style={{ height: 1, backgroundColor: 'var(--wx-divider)' }} />}
+                    {idx < days.length - 1 && <div className="weatherPage__rowDivider" />}
                   </div>
                 );
               })}

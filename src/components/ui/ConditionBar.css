@@ -1,0 +1,66 @@
+/* ConditionBar */
+
+.conditionBar__root {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.conditionBar__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.conditionBar__value {
+  font-size: 14px;
+}
+
+.conditionBar__trackWrap {
+  position: relative;
+  height: 20px;
+}
+
+.conditionBar__track {
+  height: 6px;
+  border-radius: 4px;
+  margin-top: 14px;
+}
+
+.conditionBar__marker {
+  position: absolute;
+  transform: translateX(-1px);
+  top: 0;
+  width: 2px;
+  height: 14px;
+  background-color: #fff;
+  border-radius: 1px;
+}
+
+.conditionBar__dot {
+  position: absolute;
+  transform: translateX(-2px);
+  top: 12px;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: #fff;
+}
+
+.conditionBar__status {
+  text-align: right;
+  font-size: 10px;
+  font-weight: 600;
+}
+
+.conditionBar__status[data-status="green"] {
+  color: var(--green);
+}
+
+.conditionBar__status[data-status="amber"] {
+  color: var(--amber);
+}
+
+.conditionBar__status[data-status="red"] {
+  color: var(--red);
+}

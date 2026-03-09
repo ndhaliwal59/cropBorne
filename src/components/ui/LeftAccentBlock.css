@@ -1,0 +1,19 @@
+/* LeftAccentBlock */
+
+.leftAccentBlock {
+  background-color: var(--surface2);
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+}
+
+.leftAccentBlock[data-accent="green"] {
+  border-left: 4px solid var(--green);
+}
+
+.leftAccentBlock[data-accent="amber"] {
+  border-left: 4px solid var(--amber);
+}
+
+.leftAccentBlock[data-accent="red"] {
+  border-left: 4px solid var(--red);
+}

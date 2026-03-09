@@ -1,6 +1,7 @@
 import type { PairedHour } from '../../types';
 import { getHeatDayInfo } from '../../heatLogic';
 import { HeatDayCard } from './HeatDayCard';
+import './HeatSection.css';
 
 interface HeatSectionProps {
   paired: PairedHour[];
@@ -20,14 +21,12 @@ export function HeatSection({ paired, nowIndex }: HeatSectionProps) {
   }
 
   return (
-    <section id="heat" style={{ paddingTop: 24, paddingBottom: 24 }}>
-      <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 4 }}>
-        HEAT STRESS & LABOR COMPLIANCE
-      </h2>
-      <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 24 }}>
+    <section id="heat" className="heatSection__section">
+      <h2 className="heatSection__title">HEAT STRESS & LABOR COMPLIANCE</h2>
+      <p className="heatSection__sub">
         Cal/OSHA threshold monitoring · Daily shift scheduling · Field trafficability
       </p>
-      <div style={{ display: 'flex', gap: 8, overflowX: 'auto' }}>{cards}</div>
+      <div className="heatSection__scroll">{cards}</div>
     </section>
   );
 }

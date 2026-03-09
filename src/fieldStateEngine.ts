@@ -1,5 +1,5 @@
 import type { ForecastResponse, WeatherHour, FieldState, PairedHour } from './types';
-import { celsiusToFahrenheit, kmhToMph, windDirectionFromDegrees } from './types';
+import { celsiusToFahrenheit, kmhToMph } from './types';
 
 const SEED = {
   daysSinceRain: 5,
@@ -95,5 +95,3 @@ export function runFieldStateEngine(forecast: ForecastResponse): PairedHour[] {
 
   return result;
 }
-
-export { windDirectionFromDegrees };

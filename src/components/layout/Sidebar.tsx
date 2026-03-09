@@ -5,6 +5,7 @@ import { SidebarHeatMonitoring } from '../sidebar/SidebarHeatMonitoring';
 import { SidebarFooter } from '../sidebar/SidebarFooter';
 import { getPowderyMildewState, getDownyMildewState } from '../../diseaseLogic';
 import type { PairedHour } from '../../types';
+import './Sidebar.css';
 
 interface SidebarProps {
   paired: PairedHour[];
@@ -23,21 +24,7 @@ export function Sidebar({
   const powderyState = getPowderyMildewState(paired, nowIndex);
   const downyState = getDownyMildewState(paired, nowIndex);
   return (
-    <aside
-      style={{
-        width: 'var(--sidebar-width)',
-        minWidth: 'var(--sidebar-width)',
-        height: '100vh',
-        position: 'fixed',
-        left: 0,
-        top: 0,
-        backgroundColor: 'var(--surface1)',
-        borderRight: '1px solid var(--border)',
-        display: 'flex',
-        flexDirection: 'column',
-        overflow: 'hidden',
-      }}
-    >
+    <aside className="sidebar__aside">
       <SidebarWordmark />
       {now && (
         <SidebarCropConditions

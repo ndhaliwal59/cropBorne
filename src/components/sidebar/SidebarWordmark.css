@@ -1,0 +1,28 @@
+/* SidebarWordmark */
+
+.sidebarWordmark__root {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebarWordmark__title {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.2em;
+  color: var(--text-primary);
+}
+
+.sidebarWordmark__sub {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.sidebarWordmark__meta {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}

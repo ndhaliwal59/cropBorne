@@ -1,6 +1,7 @@
 import { LeftAccentBlock } from '../ui/LeftAccentBlock';
 import { LabeledDataRow } from '../ui/LabeledDataRow';
 import type { CommitWindowResult } from '../../harvestLogic';
+import './CommitWindowBanner.css';
 
 interface CommitWindowBannerProps {
   result: CommitWindowResult;
@@ -11,11 +12,11 @@ export function CommitWindowBanner({ result, dryStreakHours = 0 }: CommitWindowB
   if (result.state === 'WINDOW') {
     return (
       <LeftAccentBlock accent="green">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 12 }}>
-          <span style={{ fontFamily: 'var(--font-sans)', fontSize: 15, fontWeight: 600, color: 'var(--text-primary)' }}>
+        <div className="commitWindowBanner__row">
+          <span className="commitWindowBanner__main">
             ✓ Send crews {result.windowStartDate} · Dispatch by {result.dispatchByDate ?? '—'}
           </span>
-          <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, fontWeight: 600, color: 'var(--green)' }}>
+          <span className="commitWindowBanner__streak">
             DRY STREAK {dryStreakHours} hrs ✓
           </span>
         </div>
@@ -26,10 +27,10 @@ export function CommitWindowBanner({ result, dryStreakHours = 0 }: CommitWindowB
   if (result.state === 'RECOVERY') {
     return (
       <LeftAccentBlock accent="amber">
-        <div className="label-caps" style={{ marginBottom: 8 }}>RECOVERY IN PROGRESS</div>
-        <div style={{ height: 1, backgroundColor: 'var(--border)', margin: '8px 0' }} />
+        <div className="label-caps commitWindowBanner__label">RECOVERY IN PROGRESS</div>
+        <div className="commitWindowBanner__divider" />
         <LabeledDataRow label="EARLIEST VIABLE ENTRY" value={result.earliestViableEntry ?? '—'} />
-        <div style={{ height: 1, backgroundColor: 'var(--border)', margin: '8px 0' }} />
+        <div className="commitWindowBanner__divider" />
         <LabeledDataRow
           label="DRY STREAK"
           value={`${result.dryStreakHours ?? 0} hrs  ·  ${result.hoursRemaining ?? 0} hrs remaining`}
@@ -44,9 +45,9 @@ export function CommitWindowBanner({ result, dryStreakHours = 0 }: CommitWindowB
 
   return (
     <LeftAccentBlock accent="red">
-      <div className="label-caps" style={{ marginBottom: 4 }}>NO CLEAR WINDOW IN FORECAST</div>
-      <div style={{ height: 1, backgroundColor: 'var(--border)', margin: '8px 0' }} />
-      <p style={{ fontFamily: 'var(--font-sans)', fontSize: 14, color: 'var(--text-primary)', margin: 0 }}>
+      <div className="label-caps commitWindowBanner__labelTight">NO CLEAR WINDOW IN FORECAST</div>
+      <div className="commitWindowBanner__divider" />
+      <p className="commitWindowBanner__para">
         Conditions do not support harvest in the next 10 days. Monitor daily.
       </p>
     </LeftAccentBlock>

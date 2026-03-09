@@ -1,0 +1,31 @@
+/* SidebarCropConditions */
+
+.sidebarCropConditions__root {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+
+.sidebarCropConditions__indicator {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  margin-bottom: 4px;
+}
+
+.sidebarCropConditions__dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background-color: var(--green);
+}
+
+.sidebarCropConditions__label {
+  margin-bottom: 12px;
+}
+
+.sidebarCropConditions__bars {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}

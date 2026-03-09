@@ -1,3 +1,5 @@
+import './SidebarFooter.css';
+
 interface SidebarFooterProps {
   isCached?: boolean;
   cachedTimestamp?: string;
@@ -6,14 +8,8 @@ interface SidebarFooterProps {
 export function SidebarFooter({ isCached = false, cachedTimestamp }: SidebarFooterProps) {
   return (
     <div
-      style={{
-        marginTop: 'auto',
-        padding: '16px 20px',
-        borderTop: '1px solid var(--border)',
-        fontFamily: 'var(--font-mono)',
-        fontSize: '11px',
-        color: isCached ? 'var(--amber)' : 'var(--text-tertiary)',
-      }}
+      className="sidebarFooter__root"
+      data-cached={isCached}
     >
       {isCached && cachedTimestamp
         ? `Cached data · ${cachedTimestamp}`

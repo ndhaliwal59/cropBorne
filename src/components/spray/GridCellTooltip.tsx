@@ -1,6 +1,7 @@
 import type { StatusColor } from '../../constants';
 import type { WeatherHour, FieldState } from '../../types';
 import { windDirectionFromDegrees } from '../../types';
+import './GridCellTooltip.css';
 
 interface GridCellTooltipProps {
   dayLabel: string;
@@ -11,73 +12,51 @@ interface GridCellTooltipProps {
 }
 
 export function GridCellTooltip({
-  dayLabel,
+  dayLabel: _dayLabel,
   timeLabel,
   status,
   weather,
   fieldState,
 }: GridCellTooltipProps) {
   const statusLabel = status === 'green' ? 'Optimal' : status === 'amber' ? 'Caution' : 'Unfavorable';
-  const statusColor = status ?? 'green';
+  const statusKey = status ?? 'green';
 
   return (
-    <div
-      style={{
-        backgroundColor: 'var(--surface2)',
-        border: '1px solid var(--border-active)',
-        borderRadius: 'var(--radius-md)',
-        padding: 12,
-        minWidth: 220,
-        boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-      }}
-    >
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          alignItems: 'center',
-          marginBottom: 8,
-        }}
-      >
-        <span style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--text-primary)' }}>
-          {dayLabel} · {timeLabel}
-        </span>
+    <div className="gridCellTooltip__root">
+      <div className="gridCellTooltip__header">
+        <span className="gridCellTooltip__time">{timeLabel}</span>
         {status && (
           <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              fontWeight: 700,
-              color: `var(--${statusColor})`,
-            }}
+            className="gridCellTooltip__status"
+            data-status={statusKey}
           >
             {statusLabel.toUpperCase()}
           </span>
         )}
       </div>
-      <div style={{ height: 1, backgroundColor: 'var(--border)', marginBottom: 8 }} />
-      <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--text-tertiary)', marginBottom: 6 }}>
+      <div className="gridCellTooltip__divider" />
+      <div className="gridCellTooltip__sub">
         {status === 'green' ? 'Optimal conditions' : status === 'amber' ? 'Caution' : 'Unfavorable'}
       </div>
-      <div style={{ height: 1, backgroundColor: 'var(--border)', marginBottom: 8 }} />
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <div className="gridCellTooltip__divider" />
+      <div className="gridCellTooltip__rows">
+        <div className="gridCellTooltip__row">
           <span className="label-caps">Wind</span>
-          <span className="value-mono" style={{ fontSize: 12 }}>
+          <span className="value-mono gridCellTooltip__value">
             {Math.round(weather.windspeed_10m)} mph → {windDirectionFromDegrees(weather.winddirection_10m)}
           </span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="gridCellTooltip__row">
           <span className="label-caps">Humidity</span>
-          <span className="value-mono" style={{ fontSize: 12 }}>{weather.relative_humidity_2m}%</span>
+          <span className="value-mono gridCellTooltip__value">{weather.relative_humidity_2m}%</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="gridCellTooltip__row">
           <span className="label-caps">Rain prob</span>
-          <span className="value-mono" style={{ fontSize: 12 }}>{weather.precipitation_probability}%</span>
+          <span className="value-mono gridCellTooltip__value">{weather.precipitation_probability}%</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="gridCellTooltip__row">
           <span className="label-caps">Soil</span>
-          <span className="value-mono" style={{ fontSize: 12 }}>{fieldState.soilMoisture}%</span>
+          <span className="value-mono gridCellTooltip__value">{fieldState.soilMoisture}%</span>
         </div>
       </div>
     </div>

@@ -1,0 +1,25 @@
+/* HarvestSection */
+
+.harvestSection__section {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.harvestSection__title {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.harvestSection__sub {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.harvestSection__dryStreak {
+  color: var(--green);
+  font-weight: 600;
+}

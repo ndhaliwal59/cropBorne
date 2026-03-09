@@ -1,5 +1,4 @@
 import type { PairedHour } from './types';
-import type { StatusColor } from './constants';
 import { THRESHOLDS } from './constants';
 import { getSprayStatusForHour } from './sectionStatus/spray';
 
@@ -11,35 +10,6 @@ export interface SprayWindow {
   startTime: string;
   endTime: string;
   hours: number;
-}
-
-export function findNextOptimalWindow(
-  paired: PairedHour[],
-  fromIndex: number
-): SprayWindow | null {
-  const limit = Math.min(fromIndex + 7 * 24, paired.length);
-  let runStart: number | null = null;
-  for (let i = fromIndex; i < limit; i++) {
-    const status = getSprayStatusForHour(paired, i);
-    if (status === 'green') {
-      if (runStart === null) runStart = i;
-      const runLen = i - runStart + 1;
-      if (runLen >= MIN_CONSECUTIVE) {
-        const startTime = paired[runStart].weatherHour.time;
-        const endTime = paired[i].weatherHour.time;
-        return {
-          startIndex: runStart,
-          endIndex: i,
-          startTime,
-          endTime,
-          hours: runLen,
-        };
-      }
-    } else {
-      runStart = null;
-    }
-  }
-  return null;
 }
 
 export function getBestWindowForDay(
@@ -89,11 +59,4 @@ export function formatDayDate(iso: string): string {
   const mon = d.toLocaleDateString('en-US', { month: 'short' }).toUpperCase();
   const date = d.getDate();
   return `${day} ${mon} ${date}`;
-}
-
-export function getSprayCellStatus(
-  paired: PairedHour[],
-  index: number
-): StatusColor | null {
-  return getSprayStatusForHour(paired, index);
 }

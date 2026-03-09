@@ -1,0 +1,21 @@
+/* SidebarAlertBadge */
+
+.sidebarAlertBadge__button {
+  width: 100%;
+  text-align: left;
+  border: none;
+  background: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+.sidebarAlertBadge__label {
+  color: var(--red);
+  margin-bottom: 4px;
+}
+
+.sidebarAlertBadge__text {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-primary);
+}

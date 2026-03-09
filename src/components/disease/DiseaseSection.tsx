@@ -1,6 +1,7 @@
 import type { PairedHour } from '../../types';
 import { getPowderyMildewState, getDownyMildewState } from '../../diseaseLogic';
 import { DiseasePanel } from './DiseasePanel';
+import './DiseaseSection.css';
 
 interface DiseaseSectionProps {
   paired: PairedHour[];
@@ -15,14 +16,12 @@ export function DiseaseSection({ paired, nowIndex }: DiseaseSectionProps) {
   if (!fieldState) return null;
 
   return (
-    <section id="disease" style={{ paddingTop: 24, paddingBottom: 24 }}>
-      <h2 style={{ fontFamily: 'var(--font-sans)', fontSize: 20, fontWeight: 600, marginBottom: 4 }}>
-        DISEASE CONDITIONS MONITORING
-      </h2>
-      <p style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--text-secondary)', marginBottom: 24 }}>
+    <section id="disease" className="diseaseSection__section">
+      <h2 className="diseaseSection__title">DISEASE CONDITIONS MONITORING</h2>
+      <p className="diseaseSection__sub">
         Powdery mildew · Downy mildew · 48-hour lookahead
       </p>
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+      <div className="diseaseSection__grid">
         <DiseasePanel
           title="POWDERY MILDEW"
           subtitle="Erysiphe necator · Warm, dry-wind cycles."

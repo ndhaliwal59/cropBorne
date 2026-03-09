@@ -1,0 +1,91 @@
+/* TenDayRatingStrip */
+
+.tenDayRatingStrip__wrap {
+  margin-top: 24px;
+}
+
+.tenDayRatingStrip__scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}
+
+.tenDayRatingStrip__card {
+  flex: 1;
+  min-width: 0;
+  background-color: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-card);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.tenDayRatingStrip__card[data-in-window="true"] {
+  border-top: 2px solid var(--green);
+}
+
+.tenDayRatingStrip__cardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.tenDayRatingStrip__cardLeft {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.tenDayRatingStrip__todayDot {
+  width: 4px;
+  height: 4px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background-color: var(--text-primary);
+}
+
+.tenDayRatingStrip__dayAbbrev {
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+.tenDayRatingStrip__rating {
+  font-size: 22px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.tenDayRatingStrip__rating[data-status="green"] {
+  color: var(--green);
+}
+
+.tenDayRatingStrip__rating[data-status="amber"] {
+  color: var(--amber);
+}
+
+.tenDayRatingStrip__rating[data-status="red"] {
+  color: var(--red);
+}
+
+.tenDayRatingStrip__date {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.tenDayRatingStrip__details {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-tertiary);
+}

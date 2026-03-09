@@ -1,4 +1,5 @@
 import { LeftAccentBlock } from '../ui/LeftAccentBlock';
+import './SidebarAlertBadge.css';
 
 interface SidebarAlertBadgeProps {
   diseaseName: string;
@@ -15,20 +16,11 @@ export function SidebarAlertBadge({
     <button
       type="button"
       onClick={onScrollToDisease}
-      style={{
-        width: '100%',
-        textAlign: 'left',
-        border: 'none',
-        background: 'none',
-        cursor: 'pointer',
-        padding: 0,
-      }}
+      className="sidebarAlertBadge__button"
     >
       <LeftAccentBlock accent="red">
-        <div className="label-caps" style={{ color: 'var(--red)', marginBottom: 4 }}>
-          Disease alert
-        </div>
-        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 13, color: 'var(--text-primary)' }}>
+        <div className="label-caps sidebarAlertBadge__label">Disease alert</div>
+        <div className="sidebarAlertBadge__text">
           {diseaseName} · {severity}
         </div>
       </LeftAccentBlock>

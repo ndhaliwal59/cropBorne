@@ -1,0 +1,26 @@
+/* HeatSection */
+
+.heatSection__section {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.heatSection__title {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.heatSection__sub {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}
+
+.heatSection__scroll {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+}

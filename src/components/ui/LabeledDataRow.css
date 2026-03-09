@@ -1,0 +1,13 @@
+/* LabeledDataRow */
+
+.labeledDataRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.labeledDataRow__value {
+  font-size: 14px;
+  font-weight: 500;
+}

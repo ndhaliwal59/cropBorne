@@ -3,9 +3,12 @@ import type { PairedHour } from '../../types';
 import type { StatusColor } from '../../constants';
 import { getSprayStatusForHour } from '../../sectionStatus/spray';
 import { GridCellTooltip } from './GridCellTooltip';
+import './HourlyGrid.css';
 
-const CELL_HEIGHT = 28;
 const ROW_LABEL_WIDTH = 48;
+const TOOLTIP_WIDTH = 240;
+const TOOLTIP_OFFSET = 12;
+const CELL_HEIGHT = 28;
 
 function formatHourLabel(hour: number): string {
   if (hour === 0) return '12am';
@@ -46,17 +49,20 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
     weather: import('../../types').WeatherHour;
     fieldState: import('../../types').FieldState;
   } | null>(null);
-  const [hoverPos, setHoverPos] = useState<{ x: number; y: number; placeAbove: boolean } | null>(null);
+  const [hoverPos, setHoverPos] = useState<{ x: number; y: number; placeAbove: boolean; placeLeft: boolean } | null>(null);
   const timeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const showTooltip = (data: typeof tooltip, x: number, y: number) => {
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
     timeoutRef.current = setTimeout(() => {
       setTooltip(data);
+      const placeAbove = y > window.innerHeight / 2;
+      const placeLeft = x > window.innerWidth - TOOLTIP_WIDTH - TOOLTIP_OFFSET - 16;
       setHoverPos({
         x,
         y,
-        placeAbove: y > window.innerHeight / 2,
+        placeAbove,
+        placeLeft,
       });
     }, 150);
   };
@@ -84,9 +90,9 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
   }
 
   return (
-    <div style={{ position: 'relative', width: '100%' }}>
-      <div style={{ overflowX: 'hidden', width: '100%' }}>
-        <table style={{ borderCollapse: 'collapse', tableLayout: 'fixed', width: '100%' }}>
+    <div className="hourlyGrid__wrap">
+      <div className="hourlyGrid__overflow">
+        <table className="hourlyGrid__table">
           <colgroup>
             <col style={{ width: '48px' }} />
             {dayLabels.map((_, i) => (
@@ -99,36 +105,17 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
               return (
                 <tr key={hour}>
                   <td
-                    style={{
-                      width: ROW_LABEL_WIDTH,
-                      height: CELL_HEIGHT,
-                      paddingLeft: 4,
-                      borderTop: isNowRow ? '1px solid rgba(37,40,48,0.2)' : undefined,
-                      fontFamily: 'var(--font-mono)',
-                      fontSize: 10,
-                      color: 'var(--text-tertiary)',
-                      verticalAlign: 'middle',
-                    }}
+                    className={`hourlyGrid__rowLabel ${isNowRow ? 'hourlyGrid__rowLabelNow' : ''}`}
+                    style={{ width: ROW_LABEL_WIDTH, height: CELL_HEIGHT }}
                   >
                     {hour % 3 === 0 ? formatHourLabel(hour) : ''}
-                    {isNowRow && <span style={{ marginLeft: 4, fontSize: 9 }}>NOW</span>}
+                    {isNowRow && <span className="hourlyGrid__nowBadge">NOW</span>}
                   </td>
                   {dayLabels.map((_, d) => {
                     const cellIndex = getIndexForDayHour(paired, refMidnight, d, hour);
                     if (cellIndex < 0 || cellIndex >= paired.length) {
                       return (
-                        <td
-                          key={d}
-                          style={{
-                            height: CELL_HEIGHT,
-                            backgroundColor: 'var(--surface2)',
-                            border: '1px solid var(--border)',
-                            textAlign: 'center',
-                            fontFamily: 'var(--font-sans)',
-                            fontSize: 10,
-                            color: 'var(--text-tertiary)',
-                          }}
-                        >
+                        <td key={d} className="hourlyGrid__cellEmpty" style={{ height: CELL_HEIGHT }}>
                           —
                         </td>
                       );
@@ -137,21 +124,7 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
                     const isPastCurrentDayCell = d === 0 && cellIndex < nowIndex;
                     if (isPastCurrentDayCell) {
                       return (
-                        <td
-                          key={d}
-                          style={{
-                            height: CELL_HEIGHT,
-                            minHeight: CELL_HEIGHT,
-                            backgroundColor: 'var(--surface2)',
-                            border: '1px solid var(--border)',
-                            padding: 0,
-                            verticalAlign: 'middle',
-                            textAlign: 'center',
-                            fontFamily: 'var(--font-sans)',
-                            fontSize: 12,
-                            color: 'var(--text-tertiary)',
-                          }}
-                        >
+                        <td key={d} className="hourlyGrid__cellPast" style={{ height: CELL_HEIGHT }}>
                           -
                         </td>
                       );
@@ -159,14 +132,6 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
 
                     const pair = paired[cellIndex];
                     const status = getSprayStatusForHour(paired, cellIndex);
-                    const statusBg =
-                      status === 'green'
-                        ? 'rgba(34, 197, 94, 0.35)'
-                        : status === 'amber'
-                          ? 'rgba(245, 158, 11, 0.35)'
-                          : status === 'red'
-                            ? 'rgba(239, 68, 68, 0.35)'
-                            : 'var(--surface2)';
                     const dayLabel = new Date(pair.weatherHour.time).toLocaleDateString('en-US', { weekday: 'long' });
                     const timeLabel = (() => {
                       const h = new Date(pair.weatherHour.time).getHours();
@@ -178,15 +143,9 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
                     return (
                       <td
                         key={d}
-                        style={{
-                          height: CELL_HEIGHT,
-                          minHeight: CELL_HEIGHT,
-                          backgroundColor: statusBg,
-                          border: '1px solid var(--border)',
-                          padding: 0,
-                          verticalAlign: 'middle',
-                          cursor: 'default',
-                        }}
+                        className="hourlyGrid__cell"
+                        data-status={status ?? 'none'}
+                        style={{ height: CELL_HEIGHT }}
                         onMouseEnter={(e) => {
                           showTooltip(
                             {
@@ -212,14 +171,12 @@ export function HourlyGrid({ paired, nowIndex }: HourlyGridProps) {
       </div>
       {tooltip && hoverPos && (
         <div
+          className="hourlyGrid__tooltipWrapper"
           style={{
-            position: 'fixed',
-            left: hoverPos.x + 12,
-            top: hoverPos.placeAbove ? 'auto' : hoverPos.y + 12,
-            bottom: hoverPos.placeAbove ? window.innerHeight - hoverPos.y + 12 : 'auto',
-            zIndex: 1000,
-            opacity: 1,
-            transition: 'opacity 150ms ease',
+            left: hoverPos.placeLeft ? 'auto' : hoverPos.x + TOOLTIP_OFFSET,
+            right: hoverPos.placeLeft ? window.innerWidth - hoverPos.x + TOOLTIP_OFFSET : 'auto',
+            top: hoverPos.placeAbove ? 'auto' : hoverPos.y + TOOLTIP_OFFSET,
+            bottom: hoverPos.placeAbove ? window.innerHeight - hoverPos.y + TOOLTIP_OFFSET : 'auto',
           }}
         >
           <GridCellTooltip

@@ -1,0 +1,20 @@
+/* SpraySection */
+
+.spraySection__section {
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+
+.spraySection__title {
+  font-family: var(--font-sans);
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.spraySection__sub {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 24px;
+}

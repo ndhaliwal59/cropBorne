@@ -1,0 +1,133 @@
+/* HarvestTimeline */
+
+.harvestTimeline__wrap {
+  position: relative;
+  margin-top: 24px;
+}
+
+.harvestTimeline__grid {
+  display: grid;
+  gap: 0;
+  font-family: var(--font-sans);
+  text-align: center;
+  align-items: end;
+}
+
+.harvestTimeline__dayName {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 4px;
+}
+
+.harvestTimeline__date {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+}
+
+.harvestTimeline__circle {
+  font-size: 24px;
+  line-height: 1;
+  margin-bottom: 6px;
+  cursor: pointer;
+  opacity: 0.85;
+  transform: scale(1);
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.harvestTimeline__circle:hover {
+  opacity: 1;
+  transform: scale(1.15);
+}
+
+.harvestTimeline__circle[data-status="green"] {
+  color: var(--green);
+}
+
+.harvestTimeline__circle[data-status="amber"] {
+  color: var(--amber);
+}
+
+.harvestTimeline__circle[data-status="red"] {
+  color: var(--red);
+}
+
+.harvestTimeline__statusLabel {
+  font-size: 12px;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.harvestTimeline__statusLabel[data-status="green"] {
+  color: var(--green);
+}
+
+.harvestTimeline__statusLabel[data-status="amber"] {
+  color: var(--amber);
+}
+
+.harvestTimeline__statusLabel[data-status="red"] {
+  color: var(--red);
+}
+
+/* Tooltip */
+.harvestTimeline__tooltip {
+  position: fixed;
+  transform: translate(-50%, 0) translateY(23px);
+  background-color: var(--surface1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  pointer-events: none;
+  min-width: 200px;
+}
+
+.harvestTimeline__tooltipHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.harvestTimeline__tooltipTitle {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.harvestTimeline__tooltipRating {
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.harvestTimeline__tooltipRating[data-status="green"] {
+  color: var(--green);
+}
+
+.harvestTimeline__tooltipRating[data-status="amber"] {
+  color: var(--amber);
+}
+
+.harvestTimeline__tooltipRating[data-status="red"] {
+  color: var(--red);
+}
+
+.harvestTimeline__tooltipDivider {
+  height: 1px;
+  background-color: var(--border);
+  margin: 6px 0;
+}
+
+.harvestTimeline__tooltipBody {
+  font-family: var(--font-sans);
+  font-size: 12px;
+  color: var(--text-secondary);
+}

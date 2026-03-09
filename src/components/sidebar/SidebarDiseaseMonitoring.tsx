@@ -2,23 +2,21 @@ import { useState, useRef, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import type { FieldState } from '../../types';
 import type { DiseasePanelState } from '../../diseaseLogic';
+import './SidebarDiseaseMonitoring.css';
 
 type DiseaseKey = 'powdery' | 'downy';
 
 const DISEASES: {
   key: DiseaseKey;
   name: string;
-  subtitle: string;
 }[] = [
   {
     key: 'powdery',
     name: 'POWDERY MILDEW',
-    subtitle: 'Erysiphe necator · Warm, dry-wind cycles.',
   },
   {
     key: 'downy',
     name: 'DOWNY MILDEW',
-    subtitle: 'Plasmopara viticola · Rain and leaf wetness.',
   },
 ];
 
@@ -26,18 +24,15 @@ interface SidebarDiseaseMonitoringProps {
   powderyState: DiseasePanelState;
   downyState: DiseasePanelState;
   fieldState: FieldState;
-  /** When true, render only the rows (no section wrapper or title) for use under a shared MONITORING header */
   embedded?: boolean;
 }
 
 function TooltipContent({
   name,
-  subtitle,
   state,
   fieldState,
 }: {
   name: string;
-  subtitle: string;
   state: DiseasePanelState;
   fieldState: FieldState;
 }) {
@@ -45,40 +40,17 @@ function TooltipContent({
   const isWarning = state.severity === 'WARNING';
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
+    <div className="sidebarDiseaseMonitoring__tooltipCol">
       <div>
-        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 12, fontWeight: 600, color: 'var(--text-primary)' }}>
-          {name}
-        </div>
-        <div style={{ fontFamily: 'var(--font-sans)', fontSize: 11, color: 'var(--text-secondary)', marginTop: 4 }}>
-          {subtitle}
-        </div>
+        <div className="sidebarDiseaseMonitoring__tooltipTitle">{name}</div>
       </div>
 
-      <div style={{ display: 'flex', justifyContent: 'flex-start' }}>
+      <div className="sidebarDiseaseMonitoring__tooltipTags">
         {isInactive ? (
-          <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              fontWeight: 500,
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              color: 'var(--text-tertiary)',
-            }}
-          >
-            MONITORING
-          </span>
+          <span className="sidebarDiseaseMonitoring__tooltipTag">MONITORING</span>
         ) : (
           <span
-            style={{
-              fontFamily: 'var(--font-sans)',
-              fontSize: 11,
-              fontWeight: 600,
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              color: isWarning ? 'var(--red)' : 'var(--amber)',
-            }}
+            className={`sidebarDiseaseMonitoring__tooltipTag ${isWarning ? 'sidebarDiseaseMonitoring__tooltipTagAlert' : 'sidebarDiseaseMonitoring__tooltipTagWarning'}`}
           >
             {state.severity === 'WARNING' ? '⚠ WARNING' : '⚠ WATCH'}
           </span>
@@ -88,38 +60,24 @@ function TooltipContent({
       {!isInactive && (
         <>
           {state.riskBeginsInHours != null && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-              <span className="label-caps" style={{ color: 'var(--text-tertiary)' }}>
-                RISK BEGINS IN
-              </span>
-              <span className="value-mono" style={{ fontSize: 12, fontWeight: 500 }}>
-                {state.riskBeginsInHours} hrs
-              </span>
+            <div className="sidebarDiseaseMonitoring__tooltipRow">
+              <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">RISK BEGINS IN</span>
+              <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{state.riskBeginsInHours} hrs</span>
             </div>
           )}
           {state.sustainedHours != null && (
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-              <span className="label-caps" style={{ color: 'var(--text-tertiary)' }}>
-                SUSTAINED FOR
-              </span>
-              <span className="value-mono" style={{ fontSize: 12, fontWeight: 500 }}>
-                {state.sustainedHours} hrs
-              </span>
+            <div className="sidebarDiseaseMonitoring__tooltipRow">
+              <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">SUSTAINED FOR</span>
+              <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{state.sustainedHours} hrs</span>
             </div>
           )}
           {state.message && (
-            <p style={{ fontFamily: 'var(--font-sans)', fontSize: 12, color: 'var(--text-primary)', margin: 0 }}>
-              {state.message}
-            </p>
+            <p className="sidebarDiseaseMonitoring__tooltipPara">{state.message}</p>
           )}
           {state.actionLine && (
             <div
-              style={{
-                fontFamily: 'var(--font-sans)',
-                fontSize: 12,
-                fontWeight: 600,
-                color: isWarning ? 'var(--red)' : 'var(--amber)',
-              }}
+              className="sidebarDiseaseMonitoring__tooltipAction"
+              data-severity={isWarning ? 'warning' : 'watch'}
             >
               {state.actionLine}
             </div>
@@ -127,30 +85,18 @@ function TooltipContent({
         </>
       )}
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 6, marginTop: 4 }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-          <span className="label-caps" style={{ color: 'var(--text-tertiary)' }}>
-            LEAF WETNESS
-          </span>
-          <span className="value-mono" style={{ fontSize: 12, fontWeight: 500 }}>
-            {fieldState.leafWetness} / 10
-          </span>
+      <div className="sidebarDiseaseMonitoring__tooltipMeta">
+        <div className="sidebarDiseaseMonitoring__tooltipRow">
+          <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">LEAF WETNESS</span>
+          <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.leafWetness} / 10</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-          <span className="label-caps" style={{ color: 'var(--text-tertiary)' }}>
-            24HR RAIN
-          </span>
-          <span className="value-mono" style={{ fontSize: 12, fontWeight: 500 }}>
-            {fieldState.rain24h} mm
-          </span>
+        <div className="sidebarDiseaseMonitoring__tooltipRow">
+          <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">24HR RAIN</span>
+          <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.rain24h} mm</span>
         </div>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 }}>
-          <span className="label-caps" style={{ color: 'var(--text-tertiary)' }}>
-            DAYS SINCE RAIN
-          </span>
-          <span className="value-mono" style={{ fontSize: 12, fontWeight: 500 }}>
-            {fieldState.daysSinceRain}
-          </span>
+        <div className="sidebarDiseaseMonitoring__tooltipRow">
+          <span className="label-caps sidebarDiseaseMonitoring__tooltipTag">DAYS SINCE RAIN</span>
+          <span className="value-mono sidebarDiseaseMonitoring__tooltipValue">{fieldState.daysSinceRain}</span>
         </div>
       </div>
     </div>
@@ -201,12 +147,12 @@ export function SidebarDiseaseMonitoring({
   const hoveredState = hoveredKey ? states[hoveredKey] : null;
 
   const rows = (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+    <div className="sidebarDiseaseMonitoring__rows">
       {DISEASES.map(({ key, name }) => {
         const state = states[key];
         const isInactive = state.severity === 'NO_ALERT';
-        const isWatch = state.severity === 'WATCH';
         const isWarning = state.severity === 'WARNING';
+        const iconState = isInactive ? 'inactive' : isWarning ? 'warning' : 'watch';
 
         return (
           <div
@@ -218,15 +164,7 @@ export function SidebarDiseaseMonitoring({
             onMouseLeave={() => setHovered(null)}
             role="button"
             tabIndex={0}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              width: '100%',
-              padding: '8px 0',
-              cursor: 'default',
-              borderRadius: 'var(--radius-sm)',
-              transition: 'background-color 120ms ease',
-            }}
+            className="sidebarDiseaseMonitoring__row"
             onKeyDown={(e) => {
               if (e.key === 'Enter' || e.key === ' ') {
                 e.preventDefault();
@@ -234,35 +172,17 @@ export function SidebarDiseaseMonitoring({
               }
             }}
           >
-            <div
-              style={{
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                flex: 1,
-                minWidth: 0,
-              }}
-            >
+            <div className="sidebarDiseaseMonitoring__rowInner">
               <span
-                style={{
-                  fontSize: 16,
-                  lineHeight: 1,
-                  opacity: isInactive ? 0.4 : 1,
-                  color: isInactive ? 'var(--text-tertiary)' : isWarning ? 'var(--red)' : isWatch ? 'var(--amber)' : 'var(--text-tertiary)',
-                  boxShadow: isWatch ? '0 0 8px rgba(245, 158, 11, 0.4)' : isWarning ? '0 0 8px rgba(239, 68, 68, 0.4)' : 'none',
-                  animation: isWarning ? 'disease-icon-pulse 1.5s ease-in-out infinite' : undefined,
-                  borderRadius: 2,
-                }}
+                className="sidebarDiseaseMonitoring__icon"
+                data-state={iconState}
+                aria-hidden
               >
                 &#x26A0;
               </span>
               <span
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 12,
-                  fontWeight: 600,
-                  color: isInactive ? 'var(--text-tertiary)' : isWarning ? 'var(--red)' : isWatch ? 'var(--amber)' : 'var(--text-tertiary)',
-                }}
+                className="sidebarDiseaseMonitoring__name"
+                data-state={iconState}
               >
                 {name}
               </span>
@@ -278,17 +198,8 @@ export function SidebarDiseaseMonitoring({
       {embedded ? (
         rows
       ) : (
-        <div style={{ padding: '16px 20px', borderBottom: '1px solid var(--border)' }}>
-          <div
-            className="label-caps"
-            style={{
-              fontSize: 11,
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              color: 'var(--text-tertiary)',
-              marginBottom: 12,
-            }}
-          >
+        <div className="sidebarDiseaseMonitoring__section">
+          <div className="label-caps sidebarDiseaseMonitoring__label">
             DISEASE MONITORING
           </div>
           {rows}
@@ -298,25 +209,13 @@ export function SidebarDiseaseMonitoring({
       {hoveredDisease && hoveredState !== null && tooltipRect &&
         createPortal(
           <div
-            style={{
-              position: 'fixed',
-              top: tooltipRect.top,
-              left: tooltipRect.left,
-              width: 260,
-              padding: 16,
-              backgroundColor: 'var(--surface2)',
-              border: '1px solid var(--border-active)',
-              borderRadius: 8,
-              boxShadow: '0 4px 12px rgba(0,0,0,0.3)',
-              zIndex: 1000,
-              animation: 'tooltip-fade-in 150ms ease-out',
-            }}
+            className="sidebarDiseaseMonitoring__tooltip"
+            style={{ top: tooltipRect.top, left: tooltipRect.left }}
             onMouseEnter={() => hoveredKey && setHovered(hoveredKey)}
             onMouseLeave={() => setHovered(null)}
           >
             <TooltipContent
               name={hoveredDisease.name}
-              subtitle={hoveredDisease.subtitle}
               state={hoveredState}
               fieldState={fieldState}
             />

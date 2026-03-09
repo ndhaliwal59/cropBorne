@@ -1,0 +1,44 @@
+/* CommitWindowBanner */
+
+.commitWindowBanner__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.commitWindowBanner__main {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.commitWindowBanner__streak {
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green);
+}
+
+.commitWindowBanner__label {
+  margin-bottom: 8px;
+}
+
+.commitWindowBanner__labelTight {
+  margin-bottom: 4px;
+}
+
+.commitWindowBanner__divider {
+  height: 1px;
+  background-color: var(--border);
+  margin: 8px 0;
+}
+
+.commitWindowBanner__para {
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--text-primary);
+  margin: 0;
+}
